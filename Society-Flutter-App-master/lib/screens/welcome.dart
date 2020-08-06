@@ -80,7 +80,8 @@ class _WelcomePageState extends State<WelcomePage> {
                   onSaved: (value) {
                     _number = value;
                   },
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.numberWithOptions(
+                      signed: true, decimal: true),
 
                   controller: _phoneController,
                   decoration: InputDecoration(
@@ -111,13 +112,15 @@ class _WelcomePageState extends State<WelcomePage> {
                   color: Color.fromRGBO(1, 44, 50, 0.8),
                   onPressed: () {
                     verify(_phoneController.text);
-                    ;
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Otp(
-                                  phone_no: _phoneController.text,
-                                )));
+
+                    //   Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //       builder: (context) => Otp(
+                    //         phone_no: _phoneController.text,
+                    //       ),
+                    //     ),
+                    //   );
                   },
                 ),
               )
@@ -128,23 +131,36 @@ class _WelcomePageState extends State<WelcomePage> {
     );
   }
 
-  void verify(phone_no) async {
-    final PhoneVerificationCompleted verified = (AuthCredential authResult) {};
+  Future<void> verify(phone_no) async {
+    final PhoneVerificationCompleted verified = (AuthCredential authResult) {
+      // AuthService().signIn(authResult);
+    };
     final PhoneVerificationFailed failed = (AuthException excep) {
       print("${excep.message}");
     };
     final PhoneCodeSent smssent = (String verId, [int forceresend]) {
       this.verification_id = verId;
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Otp(
+            phone_no: _phoneController.text,
+            ver_code: verification_id,
+          ),
+        ),
+      );
     };
     final PhoneCodeAutoRetrievalTimeout auto_timeout = (String verId) {
       this.verification_id = verId;
     };
+
     FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: phone_no,
-        timeout: const Duration(seconds: 60),
-        verificationCompleted: verified,
-        verificationFailed: failed,
-        codeSent: null,
-        codeAutoRetrievalTimeout: null);
+      phoneNumber: phone_no,
+      timeout: const Duration(seconds: 60),
+      verificationCompleted: verified,
+      verificationFailed: failed,
+      codeSent: smssent,
+      codeAutoRetrievalTimeout: auto_timeout,
+    );
   }
 }
