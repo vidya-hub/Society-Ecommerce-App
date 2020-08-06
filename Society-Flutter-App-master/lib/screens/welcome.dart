@@ -10,7 +10,7 @@ class WelcomePage extends StatefulWidget {
 
 class _WelcomePageState extends State<WelcomePage> {
   static const routeName = '/WelcomePage';
-  String _number;
+  String _number, verification_id;
   final _phoneController = TextEditingController(text: '');
 
   @override
@@ -132,6 +132,12 @@ class _WelcomePageState extends State<WelcomePage> {
     final PhoneVerificationCompleted verified = (AuthCredential authResult) {};
     final PhoneVerificationFailed failed = (AuthException excep) {
       print("${excep.message}");
+    };
+    final PhoneCodeSent smssent = (String verId, [int forceresend]) {
+      this.verification_id = verId;
+    };
+    final PhoneCodeAutoRetrievalTimeout auto_timeout = (String verId) {
+      this.verification_id = verId;
     };
     FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: phone_no,
