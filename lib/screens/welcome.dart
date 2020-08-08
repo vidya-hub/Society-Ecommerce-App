@@ -1,6 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'package:society/screens/otp.dart';
 import 'package:society/screens/otpconfirmed.dart';
 
@@ -124,9 +124,12 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   Future<void> verify(phone_no) async {
-    final PhoneVerificationCompleted verified = (AuthCredential authResult) {
+    final PhoneVerificationCompleted verified = (AuthCredential authResult) async {
       print(authResult.providerId);
-
+       await Firestore.instance
+          .collection(phone_no)
+          .document("demodata")
+          .setData({"data": "demodata"});        
       print("verified");
       Navigator.push(
         context,
@@ -141,8 +144,8 @@ class _WelcomePageState extends State<WelcomePage> {
       print("${excep.message}");
       print("${excep.code}");
     };
-    final PhoneCodeSent smssent = (String verId, [int forceresend]) {
-      this.verification_id = verId;
+    final PhoneCodeSent smssent = (String verId, [int forceresend]) async {
+      this.verification_id = verId;      
       print("sms is sent");
       print(verId);
       print(verification_id);
