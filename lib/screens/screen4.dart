@@ -14,6 +14,7 @@ class _Screen4State extends State<Screen4> {
   @override
   void initState() {
     get_user();
+    print("init");
     super.initState();
   }
 
@@ -23,6 +24,10 @@ class _Screen4State extends State<Screen4> {
       if (user != null) {
         log_user = user;
         print(log_user.phoneNumber);
+      } else {
+        print("init_else");
+        print(user);
+        print(user.phoneNumber);
       }
     } catch (e) {
       print(e);
@@ -93,9 +98,11 @@ class _Screen4State extends State<Screen4> {
                 ),
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SelectSocietyPage()));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SelectSocietyPage(),
+                    ),
+                  );
                 },
                 color: Colors.teal[800],
               ),
@@ -111,6 +118,7 @@ class _Screen4State extends State<Screen4> {
             RaisedButton(
               child: Text("Sign-Out"),
               onPressed: () {
+                get_user();
                 print("Signed-out");
                 FirebaseAuth.instance.signOut();
                 Navigator.push(

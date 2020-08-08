@@ -136,6 +136,7 @@ class _WelcomePageState extends State<WelcomePage> {
       );
     };
     final PhoneVerificationFailed failed = (AuthException excep) {
+      // Navigator.of(context).pop();
       print("failed");
       print("${excep.message}");
       print("${excep.code}");

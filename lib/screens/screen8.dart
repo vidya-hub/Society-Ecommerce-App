@@ -4,21 +4,21 @@ import 'package:society/screens/orderDetails.dart';
 import 'package:society/screens/profilepage.dart';
 import '../screens/screen13.dart';
 
-//import 'package:society/screens/cart.dart';
-class Screen8 extends StatefulWidget {
-  @override
-  _Screen8State createState() => _Screen8State();
-}
-
 List<String> categories = ["All", "Boutique", "Groceries", "jkbkb "];
 List<Widget> _widgetList = [
-  Screen8(),
+  Screen8_wid(),
   Screen13(),
   OrderDetails(),
   ProfilePage()
 ];
 
-int _currrentIndex = 0;
+int _currentIndex = 0;
+
+//import 'package:society/screens/cart.dart';
+class Screen8 extends StatefulWidget {
+  @override
+  _Screen8State createState() => _Screen8State();
+}
 
 class _Screen8State extends State<Screen8> {
   @override
@@ -31,28 +31,37 @@ class _Screen8State extends State<Screen8> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.black,
-        currentIndex: _currrentIndex,
+        currentIndex: _currentIndex,
         onTap: (index) {
           setState(() {
-            _currrentIndex = index;
+            _currentIndex = index;
           });
         },
         items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.card_travel, color: Colors.black),
-              title:
-                  new Text("Buy", style: new TextStyle(color: Colors.black))),
+            icon: Icon(Icons.card_travel, color: Colors.black),
+            title: new Text(
+              "Buy",
+              style: new TextStyle(color: Colors.black),
+            ),
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.store, color: Colors.black),
-              title: new Text("My Store",
-                  style: new TextStyle(color: Colors.black))),
+            icon: Icon(Icons.store, color: Colors.black),
+            title: new Text(
+              "My Store",
+              style: new TextStyle(color: Colors.black),
+            ),
+          ),
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.format_list_bulleted,
-                color: Colors.black,
-              ),
-              title: new Text("My Order",
-                  style: new TextStyle(color: Colors.black))),
+            icon: Icon(
+              Icons.format_list_bulleted,
+              color: Colors.black,
+            ),
+            title: new Text(
+              "My Order",
+              style: new TextStyle(color: Colors.black),
+            ),
+          ),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.person,
@@ -62,67 +71,75 @@ class _Screen8State extends State<Screen8> {
                   style: new TextStyle(color: Colors.black))),
         ],
       ),
-      body: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(color: Colors.white, height: 40),
-                Address("   Apollo DB City", "Indore", "Nipania ", wid),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  "     Top Item Categories",
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 15,
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  height: 55,
-                  // margin: EdgeInsets.all(15.0),
-                  child: new ListView.builder(
-                    itemCount: categories.length,
-                    itemBuilder: (BuildContext context, int i) {
-                      return Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: SizedBox(
-                            child: RaisedButton(
-                              //autofocus: true,
-                              color: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25.0),
-                              ),
-                              onPressed: () {},
-                              child: new Text('${categories.elementAt(i)}'),
-                            ),
-                          ));
-                    },
-                    scrollDirection: Axis.horizontal,
-                  ),
-                ),
-                Container(
-                  width: wid,
-                  child: new Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(5.0),
-                      ),
-                      card(wid * 0.9, context),
-                      Padding(
-                        padding: EdgeInsets.all(5.0),
-                      ),
-                      card(wid * 0.9, context)
-                    ],
-                  ),
-                )
-              ])),
+      body: _widgetList[_currentIndex],
     );
+  }
+}
+
+class Screen8_wid extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(color: Colors.white, height: 40),
+              Address("   Apollo DB City", "Indore", "Nipania ",
+                  MediaQuery.of(context).size.width),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                "     Top Item Categories",
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 15,
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                height: 55,
+                // margin: EdgeInsets.all(15.0),
+                child: new ListView.builder(
+                  itemCount: categories.length,
+                  itemBuilder: (BuildContext context, int i) {
+                    return Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: SizedBox(
+                          child: RaisedButton(
+                            //autofocus: true,
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                            ),
+                            onPressed: () {},
+                            child: new Text('${categories.elementAt(i)}'),
+                          ),
+                        ));
+                  },
+                  scrollDirection: Axis.horizontal,
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: new Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(5.0),
+                    ),
+                    card(MediaQuery.of(context).size.width * 0.9, context),
+                    Padding(
+                      padding: EdgeInsets.all(5.0),
+                    ),
+                    card(MediaQuery.of(context).size.width * 0.9, context)
+                  ],
+                ),
+              )
+            ]));
   }
 }
 

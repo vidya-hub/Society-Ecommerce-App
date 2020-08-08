@@ -76,7 +76,7 @@ class _CartState extends State<Cart> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
                 child: Image(
-                  image: AssetImage("assets/food1.jpg"),
+                  image: AssetImage("assets/food1.jpeg"),
                   width: 140,
                   height: 140,
                 ),
@@ -132,7 +132,7 @@ class _CartState extends State<Cart> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
                 child: Image(
-                  image: AssetImage("assets/food1.jpg"),
+                  image: AssetImage("assets/food1.jpeg"),
                   width: 140,
                   height: 140,
                 ),
@@ -183,33 +183,37 @@ class _CartState extends State<Cart> {
           Row(
             //mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-               Padding(padding: EdgeInsets.only(left: 20)),
+              Padding(padding: EdgeInsets.only(left: 20)),
               Text(
                 "Sub Total",
                 style: TextStyle(
                   fontSize: 17,
                 ),
-              ),Padding(padding: EdgeInsets.only(left:180)),
+              ),
+              Padding(padding: EdgeInsets.only(left: 180)),
               Text(
                 "Rs 2700",
                 style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
               ),
             ],
           ),
-        Padding(padding: EdgeInsets.symmetric(vertical:10)),
-        new Container(
-          padding: EdgeInsets.only(left:10,right:10),
-        height:50,
-          child:RaisedButton(onPressed: (){
-             Navigator.push(context,  MaterialPageRoute(
-                                builder: (context) => Details()),);
-          },
-          color: Colors.blueGrey[600],
-           shape: new RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5)),
-          child:Text("CONFIRM ORDER AND PAY",style: TextStyle(fontSize: 18,color: Colors.white)),
-        )
-        ), 
+          Padding(padding: EdgeInsets.symmetric(vertical: 10)),
+          new Container(
+              padding: EdgeInsets.only(left: 10, right: 10),
+              height: 50,
+              child: RaisedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Details()),
+                  );
+                },
+                color: Colors.blueGrey[600],
+                shape: new RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                child: Text("CONFIRM ORDER AND PAY",
+                    style: TextStyle(fontSize: 18, color: Colors.white)),
+              )),
         ],
       ),
     );

@@ -43,7 +43,7 @@ class _AccountPageState extends State<AccountPage> {
                       height: 140,
                       width: 140,
                       child: Image.asset(
-                        "assets/dummyprofile.jpg",
+                        "assets/dummyprofile.jpeg",
                         fit: BoxFit.fill,
                       ),
                     ),

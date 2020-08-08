@@ -108,21 +108,21 @@ class _OrderDetailsState extends State<OrderDetails> {
                     padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
                   ),
                   ClipRRect(
-  borderRadius: BorderRadius.circular(10),
-                 child: Image(
-                    image: AssetImage("assets/food.jpg"),
-                    width: 100,
-                    height: 100,
-                  ),
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image(
+                      image: AssetImage("assets/food.jpeg"),
+                      width: 100,
+                      height: 100,
+                    ),
                   ),
                   Padding(padding: EdgeInsets.only(left: 15)),
                   ClipRRect(
-  borderRadius: BorderRadius.circular(10),
-                 child: Image(
-                    image: AssetImage("assets/food.jpg"),
-                    width: 100,
-                    height: 100,
-                  ),
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image(
+                      image: AssetImage("assets/food.jpeg"),
+                      width: 100,
+                      height: 100,
+                    ),
                   ),
                 ]),
                 Padding(padding: EdgeInsets.only(top: 20)),
@@ -212,36 +212,36 @@ class _OrderDetailsState extends State<OrderDetails> {
                     padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
                   ),
                   ClipRRect(
-  borderRadius: BorderRadius.circular(10),
-                 child: Image(
-                    image: AssetImage("assets/food.jpg"),
-                    width: 100,
-                    height: 100,
-                  ),
-                  ),
-                  Padding(padding: EdgeInsets.only(left: 10)),
-                  ClipRRect(
-  borderRadius: BorderRadius.circular(10),
-                 child: Image(
-                    image: AssetImage("assets/food.jpg"),
-                    width: 100,
-                    height: 100,
-                  ),
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image(
+                      image: AssetImage("assets/food.jpeg"),
+                      width: 100,
+                      height: 100,
+                    ),
                   ),
                   Padding(padding: EdgeInsets.only(left: 10)),
                   ClipRRect(
-  borderRadius: BorderRadius.circular(10),
-                 child: Image(
-                    image: AssetImage("assets/food.jpg"),
-                    width: 100,
-                    height: 100,
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image(
+                      image: AssetImage("assets/food.jpeg"),
+                      width: 100,
+                      height: 100,
+                    ),
                   ),
+                  Padding(padding: EdgeInsets.only(left: 10)),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image(
+                      image: AssetImage("assets/food.jpeg"),
+                      width: 100,
+                      height: 100,
+                    ),
                   ),
                 ]),
               ]),
             ],
           ),
-         new ListView(
+          new ListView(
             children: <Widget>[
               Column(children: <Widget>[
                 Row(
@@ -294,32 +294,31 @@ class _OrderDetailsState extends State<OrderDetails> {
                     padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
                   ),
                   ClipRRect(
-  borderRadius: BorderRadius.circular(10),
-                 child: Image(
-                    image: AssetImage("assets/food.jpg"),
-                    width: 100,
-                    height: 100,
-                  ),
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image(
+                      image: AssetImage("assets/food.jpeg"),
+                      width: 100,
+                      height: 100,
+                    ),
                   ),
                   Padding(padding: EdgeInsets.only(left: 10)),
                   ClipRRect(
-  borderRadius: BorderRadius.circular(10),
-                 child: Image(
-                    image: AssetImage("assets/food.jpg"),
-                    width: 100,
-                    height: 100,
-                  ),
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image(
+                      image: AssetImage("assets/food.jpeg"),
+                      width: 100,
+                      height: 100,
+                    ),
                   ),
                   Padding(padding: EdgeInsets.only(left: 10)),
-                   ClipRRect(
-  borderRadius: BorderRadius.circular(10),
-                 child: Image(
-                    image: AssetImage("assets/food.jpg"),
-                    width: 100,
-                    height: 100,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image(
+                      image: AssetImage("assets/food.jpeg"),
+                      width: 100,
+                      height: 100,
+                    ),
                   ),
-                  ),
-                  
                 ]),
                 Padding(padding: EdgeInsets.symmetric(vertical: 10)),
                 Container(
@@ -353,8 +352,8 @@ class _OrderDetailsState extends State<OrderDetails> {
                         color: Colors.white,
                         child: Text(
                           "NOT PICKED UP",
-                          style:
-                              TextStyle(color: Colors.redAccent[200], fontSize: 18),
+                          style: TextStyle(
+                              color: Colors.redAccent[200], fontSize: 18),
                         ),
                         shape: new RoundedRectangleBorder(
                             side: BorderSide(
@@ -377,43 +376,62 @@ class _OrderDetailsState extends State<OrderDetails> {
                     padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
                   ),
                   ClipRRect(
-  borderRadius: BorderRadius.circular(10),
-                 child: Image(
-                    image: AssetImage("assets/food.jpg"),
-                    width: 100,
-                    height: 100,
-                  ),
-                  ),
-                  Padding(padding: EdgeInsets.only(left: 10)),
-                 ClipRRect(
-  borderRadius: BorderRadius.circular(10),
-                 child: Image(
-                    image: AssetImage("assets/food.jpg"),
-                    width: 100,
-                    height: 100,
-                  ),
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image(
+                      image: AssetImage("assets/food.jpeg"),
+                      width: 100,
+                      height: 100,
+                    ),
                   ),
                   Padding(padding: EdgeInsets.only(left: 10)),
-                 ClipRRect(
-  borderRadius: BorderRadius.circular(10),
-                 child: Image(
-                    image: AssetImage("assets/food.jpg"),
-                    width: 100,
-                    height: 100,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image(
+                      image: AssetImage("assets/food.jpeg"),
+                      width: 100,
+                      height: 100,
+                    ),
                   ),
+                  Padding(padding: EdgeInsets.only(left: 10)),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image(
+                      image: AssetImage("assets/food.jpeg"),
+                      width: 100,
+                      height: 100,
+                    ),
                   ),
                 ]),
-                Padding(padding: EdgeInsets.symmetric(vertical:10)),
+                Padding(padding: EdgeInsets.symmetric(vertical: 10)),
                 Column(
-                // mainAxisAlignment: MainAxisAlignment.start,
-                 crossAxisAlignment: CrossAxisAlignment.start,
-                  children:<Widget>[
-                  Text("Pickup Details",style: TextStyle(fontSize:18,fontWeight:FontWeight.w600)),
-                  Text("Shweta Lakhani",style: TextStyle(fontSize:16,color: Colors.blue,),),
-                  Text("Ashmitha Ghosh (+919273846542)",style: TextStyle(fontSize:15,),),
-                  Text("904, Christa 2, Apollo DB City",style: TextStyle(fontSize:15,),),
-                  ],),
-                Padding(padding: EdgeInsets.symmetric(vertical:10)),
+                  // mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text("Pickup Details",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w600)),
+                    Text(
+                      "Shweta Lakhani",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.blue,
+                      ),
+                    ),
+                    Text(
+                      "Ashmitha Ghosh (+919273846542)",
+                      style: TextStyle(
+                        fontSize: 15,
+                      ),
+                    ),
+                    Text(
+                      "904, Christa 2, Apollo DB City",
+                      style: TextStyle(
+                        fontSize: 15,
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(padding: EdgeInsets.symmetric(vertical: 10)),
               ]),
             ],
           ),
@@ -421,11 +439,20 @@ class _OrderDetailsState extends State<OrderDetails> {
         bottomNavigationBar: BottomNavigationBar(
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-                icon: Icon(MdiIcons.compassOutline,color:Colors.black),title: Text('')),
+                icon: Icon(MdiIcons.compassOutline, color: Colors.black),
+                title: Text('')),
             BottomNavigationBarItem(
-                icon: Icon(MdiIcons.cart,color:Colors.black), title: Text('')),
+                icon: Icon(MdiIcons.cart, color: Colors.black),
+                title: Text('')),
             BottomNavigationBarItem(
-                 title: Text('Account',style: TextStyle(color: Colors.black),),icon: Icon(MdiIcons.account,color: Colors.black,)),
+                title: Text(
+                  'Account',
+                  style: TextStyle(color: Colors.black),
+                ),
+                icon: Icon(
+                  MdiIcons.account,
+                  color: Colors.black,
+                )),
           ],
           currentIndex: selectedIndex,
           fixedColor: Colors.deepPurple,

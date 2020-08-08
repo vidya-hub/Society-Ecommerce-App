@@ -75,7 +75,7 @@ class _DetailsState extends State<Details> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
                 child: Image(
-                  image: AssetImage("assets/food1.jpg"),
+                  image: AssetImage("assets/food1.jpeg"),
                   width: 140,
                   height: 140,
                 ),
@@ -131,7 +131,7 @@ class _DetailsState extends State<Details> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
                 child: Image(
-                  image: AssetImage("assets/food1.jpg"),
+                  image: AssetImage("assets/food1.jpeg"),
                   width: 140,
                   height: 140,
                 ),
@@ -182,50 +182,51 @@ class _DetailsState extends State<Details> {
           Row(
             //mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-               Padding(padding: EdgeInsets.only(left: 20)),
+              Padding(padding: EdgeInsets.only(left: 20)),
               Text(
                 "Sub Total",
                 style: TextStyle(
                   fontSize: 17,
                 ),
-              ),Padding(padding: EdgeInsets.only(left:180)),
+              ),
+              Padding(padding: EdgeInsets.only(left: 180)),
               Text(
                 "Rs 2700",
                 style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
               ),
             ],
           ),
-        Padding(padding: EdgeInsets.symmetric(vertical:10)),
-        Row(
-                  children: <Widget>[
-                    Padding(padding: EdgeInsets.only(left: 40)),
-                    RaisedButton(
-                        color: Colors.white,
-                        padding: EdgeInsets.all(15),
-                        child: Text(
-                          "CANCEL",
-                          style: TextStyle(color: Colors.black, fontSize: 18),
-                        ),
-                        shape: new RoundedRectangleBorder(
-                            side: BorderSide(
-                                color: Colors.redAccent[200],
-                                width: 1,
-                                style: BorderStyle.solid),
-                            borderRadius: BorderRadius.circular(8)),
-                        onPressed: () {}),
-                    Padding(padding: EdgeInsets.only(left: 15)),
-                    RaisedButton(
-                        color: Colors.teal[200],
-                        padding: EdgeInsets.symmetric(vertical:15,horizontal:20),
-                        child: Text(
-                          "ORDER PICKED UP",
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
-                        onPressed: () {}),
-                  ],
-                ),
+          Padding(padding: EdgeInsets.symmetric(vertical: 10)),
+          Row(
+            children: <Widget>[
+              Padding(padding: EdgeInsets.only(left: 40)),
+              RaisedButton(
+                  color: Colors.white,
+                  padding: EdgeInsets.all(15),
+                  child: Text(
+                    "CANCEL",
+                    style: TextStyle(color: Colors.black, fontSize: 18),
+                  ),
+                  shape: new RoundedRectangleBorder(
+                      side: BorderSide(
+                          color: Colors.redAccent[200],
+                          width: 1,
+                          style: BorderStyle.solid),
+                      borderRadius: BorderRadius.circular(8)),
+                  onPressed: () {}),
+              Padding(padding: EdgeInsets.only(left: 15)),
+              RaisedButton(
+                  color: Colors.teal[200],
+                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                  child: Text(
+                    "ORDER PICKED UP",
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                  shape: new RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  onPressed: () {}),
+            ],
+          ),
         ],
       ),
     );
