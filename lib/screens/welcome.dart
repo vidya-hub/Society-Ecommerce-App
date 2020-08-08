@@ -143,8 +143,8 @@ class _WelcomePageState extends State<WelcomePage> {
       print("${excep.message}");
       print("${excep.code}");
     };
-    final PhoneCodeSent smssent = (String verId, [int forceresend]) {
-      this.verification_id = verId;
+    final PhoneCodeSent smssent = (String verId, [int forceresend]) async {
+      this.verification_id = verId;      
       print("sms is sent");
       print(verId);
       print(verification_id);
