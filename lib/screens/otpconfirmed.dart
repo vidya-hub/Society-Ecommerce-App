@@ -3,7 +3,14 @@ import 'package:society/screens/buyerorseller.dart';
 import 'package:society/screens/screen4.dart';
 
 class OtpConfirmedPage extends StatelessWidget {
+
+  
+
+
+
   @override
+
+  
   Widget build(BuildContext context) {
     bool _value = false;
 

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:society/screens/otp.dart';
+import 'package:society/screens/otpconfirmed.dart';
 
 class WelcomePage extends StatefulWidget {
   @override
@@ -80,8 +81,8 @@ class _WelcomePageState extends State<WelcomePage> {
                   onSaved: (value) {
                     _number = value;
                   },
-                  keyboardType: TextInputType.numberWithOptions(
-                      signed: true, decimal: true),
+                  // keyboardType: TextInputType.numberWithOptions(
+                  //     signed: true, decimal: true),
 
                   controller: _phoneController,
                   decoration: InputDecoration(
@@ -112,15 +113,6 @@ class _WelcomePageState extends State<WelcomePage> {
                   color: Color.fromRGBO(1, 44, 50, 0.8),
                   onPressed: () {
                     verify(_phoneController.text);
-
-                    //   Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //       builder: (context) => Otp(
-                    //         phone_no: _phoneController.text,
-                    //       ),
-                    //     ),
-                    //   );
                   },
                 ),
               )
@@ -133,13 +125,26 @@ class _WelcomePageState extends State<WelcomePage> {
 
   Future<void> verify(phone_no) async {
     final PhoneVerificationCompleted verified = (AuthCredential authResult) {
-      // AuthService().signIn(authResult);
+      print(authResult.providerId);
+
+      print("verified");
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => OtpConfirmedPage(),
+        ),
+      );
     };
     final PhoneVerificationFailed failed = (AuthException excep) {
+      print("failed");
       print("${excep.message}");
+      print("${excep.code}");
     };
     final PhoneCodeSent smssent = (String verId, [int forceresend]) {
       this.verification_id = verId;
+      print("sms is sent");
+      print(verId);
+      print(verification_id);
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -152,6 +157,8 @@ class _WelcomePageState extends State<WelcomePage> {
     };
     final PhoneCodeAutoRetrievalTimeout auto_timeout = (String verId) {
       this.verification_id = verId;
+      print("timeout");
+      print(verId);
     };
 
     FirebaseAuth.instance.verifyPhoneNumber(

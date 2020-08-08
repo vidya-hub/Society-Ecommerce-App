@@ -85,10 +85,14 @@ class _BuyerOrSellerPageState extends State<BuyerOrSellerPage> {
                   ),
                   color: Colors.white,
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=> SelectSocietyPage()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SelectSocietyPage()));
                   },
                 ),
-              )
+              ),
+              
             ],
           ),
         ),

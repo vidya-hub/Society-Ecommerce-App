@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:society/screens/selectSociety.dart';
+import 'package:society/screens/welcome.dart';
 
 class Screen4 extends StatefulWidget {
   @override
@@ -7,6 +9,26 @@ class Screen4 extends StatefulWidget {
 }
 
 class _Screen4State extends State<Screen4> {
+  final _auth = FirebaseAuth.instance;
+  FirebaseUser log_user;
+  @override
+  void initState() {
+    get_user();
+    super.initState();
+  }
+
+  void get_user() async {
+    final user = await _auth.currentUser();
+    try {
+      if (user != null) {
+        log_user = user;
+        print(log_user.phoneNumber);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,8 +66,10 @@ class _Screen4State extends State<Screen4> {
                       fontSize: 20),
                 ),
                 onPressed: () {
-                   Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => SelectSocietyPage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SelectSocietyPage()));
                 },
                 color: Colors.greenAccent[400],
               ),
@@ -68,8 +92,10 @@ class _Screen4State extends State<Screen4> {
                       fontSize: 20),
                 ),
                 onPressed: () {
-                  Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => SelectSocietyPage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SelectSocietyPage()));
                 },
                 color: Colors.teal[800],
               ),
@@ -79,6 +105,22 @@ class _Screen4State extends State<Screen4> {
               width: 450,
               height: 300,
             ),
+            SizedBox(
+              height: 15,
+            ),
+            RaisedButton(
+              child: Text("Sign-Out"),
+              onPressed: () {
+                print("Signed-out");
+                FirebaseAuth.instance.signOut();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => WelcomePage(),
+                  ),
+                );
+              },
+            )
           ],
         ),
       ),

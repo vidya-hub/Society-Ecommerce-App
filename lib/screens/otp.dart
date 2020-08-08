@@ -82,8 +82,9 @@ class Otp extends StatelessWidget {
                     onPressed: () {
                       FirebaseAuth.instance.currentUser().then((user) {
                         if (user != null) {
-                          print("signed");
-                          Navigator.of(context).pop();
+                          print("otppage if con");
+                          print(user.phoneNumber);
+                          print(user.uid);
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -91,8 +92,27 @@ class Otp extends StatelessWidget {
                             ),
                           );
                         } else {
+                          print("else condition");
                           Navigator.of(context).pop();
-                          signin(ver_code, _otpcontroller.text);
+                          print(_otpcontroller.text);
+                          print(ver_code);
+                          AuthCredential phoneAuthCredential =
+                              PhoneAuthProvider.getCredential(
+                                  verificationId: ver_code,
+                                  smsCode: _otpcontroller.text);
+                          FirebaseAuth.instance
+                              .signInWithCredential(phoneAuthCredential)
+                              .then(
+                                (user) => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => OtpConfirmedPage(),
+                                  ),
+                                ).catchError(
+                                  (e) => print(e),
+                                ),
+                              );
+                          // signin(ver_code, _otpcontroller.text);
                         }
                       });
                     },
@@ -139,22 +159,21 @@ class Otp extends StatelessWidget {
     );
   }
 
-  signin(verificationCode, smsCode) {
-    BuildContext context;
-    print(verificationCode);
-    print(smsCode);
-    AuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(
-        verificationId: verificationCode, smsCode: smsCode);
+  // signin(verificationCode, smsCode) {
+  //   BuildContext context;
+  //   print(verificationCode);
+  //   print(smsCode);
+  //   AuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(
+  //       verificationId: verificationCode, smsCode: smsCode);
 
-    FirebaseAuth.instance.signInWithCredential(phoneAuthCredential).then(
-          (user) => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => OtpConfirmedPage(),
-            ),
-          ).catchError(
-            (e) => print(e),
-          ),
-        );
-  }
+  //   FirebaseAuth.instance.signInWithCredential(phoneAuthCredential).then(
+  //         (user) => Navigator.push(
+  //           context,
+  //           MaterialPageRoute(
+  //             builder: (context) => OtpConfirmedPage(),
+  //           ),
+  //         ).catchError(
+  //           (e) => print(e),
+  //         ),
+  //       );}
 }
