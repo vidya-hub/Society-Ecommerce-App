@@ -129,11 +129,7 @@ class _WelcomePageState extends State<WelcomePage> {
        await Firestore.instance
           .collection(phone_no)
           .document("demodata")
-          .setData({"data": "demodata"});
-      await Firestore.instance
-          .collection(phone_no)
-          .document("demodata")
-          .delete();  
+          .setData({"data": "demodata"});        
       print("verified");
       Navigator.push(
         context,
