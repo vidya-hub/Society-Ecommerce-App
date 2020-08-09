@@ -103,7 +103,6 @@ class Otp extends StatelessWidget {
                           FirebaseAuth.instance
                               .signInWithCredential(phoneAuthCredential)
                               .then(
-                                
                                 (user) => Navigator.push(
                                   context,
                                   MaterialPageRoute(

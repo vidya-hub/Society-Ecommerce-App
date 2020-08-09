@@ -3,6 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 import 'package:society/screens/add_product_screen.dart';
+import 'package:society/screens/screen16.dart';
 
 class AddStore extends StatefulWidget {
   @override
@@ -31,7 +32,7 @@ class _AddStoreState extends State<AddStore> {
           child: Padding(
         padding: const EdgeInsets.all(6.0),
         // padding: const EdgeInsets.only(top: 40.0, left: 6.0),
-        child: Column(
+        child:ListView(
           children: <Widget>[
             Stack(
               children: [
@@ -152,7 +153,10 @@ class _AddStoreState extends State<AddStore> {
               child: RaisedButton(
                 color: Color.fromRGBO(1, 44, 50, 0.8),
                 onPressed: () {
-                   
+                   Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => Screen16()),
+  );
                 },
                 child: Text(
                   'CREATE STORE NOW',

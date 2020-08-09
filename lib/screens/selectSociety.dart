@@ -184,7 +184,7 @@ class _SelectSocietyPageState extends State<SelectSocietyPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      "Select City",
+                      "Select State",
                       style: TextStyle(
                           color: Colors.grey,
                           fontSize: 15.0,

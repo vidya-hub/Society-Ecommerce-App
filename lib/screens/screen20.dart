@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:society/screens/orderDetails.dart';
 import '../utils/widgetCart.dart';
 
 class Details extends StatefulWidget {
@@ -213,7 +214,11 @@ class _DetailsState extends State<Details> {
                           width: 1,
                           style: BorderStyle.solid),
                       borderRadius: BorderRadius.circular(8)),
-                  onPressed: () {}),
+                  onPressed: () {
+                      Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => OrderDetails()));
+                  }),
               Padding(padding: EdgeInsets.only(left: 15)),
               RaisedButton(
                   color: Colors.teal[200],
@@ -224,7 +229,12 @@ class _DetailsState extends State<Details> {
                   ),
                   shape: new RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
-                  onPressed: () {}),
+                  onPressed: () {
+                    Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => OrderDetails()),
+  );
+                  }),
             ],
           ),
         ],

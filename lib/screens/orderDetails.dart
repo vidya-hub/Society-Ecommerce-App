@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:society/screens/screen20.dart';
 import '../utils/widget.dart';
 
 class OrderDetails extends StatefulWidget {
@@ -20,7 +21,7 @@ class _OrderDetailsState extends State<OrderDetails> {
           title: Row(
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 50),
+                padding: EdgeInsets.symmetric(horizontal: 25),
               ),
               Text("Order Details",
                   style: TextStyle(
@@ -153,7 +154,12 @@ class _OrderDetailsState extends State<OrderDetails> {
                         ),
                         shape: new RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8)),
-                        onPressed: () {}),
+                        onPressed: () {
+                          Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => Details()),
+  );
+                        }),
                   ],
                 ),
                 Padding(padding: EdgeInsets.symmetric(vertical: 10)),
@@ -436,28 +442,7 @@ class _OrderDetailsState extends State<OrderDetails> {
             ],
           ),
         ]),
-        bottomNavigationBar: BottomNavigationBar(
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-                icon: Icon(MdiIcons.compassOutline, color: Colors.black),
-                title: Text('')),
-            BottomNavigationBarItem(
-                icon: Icon(MdiIcons.cart, color: Colors.black),
-                title: Text('')),
-            BottomNavigationBarItem(
-                title: Text(
-                  'Account',
-                  style: TextStyle(color: Colors.black),
-                ),
-                icon: Icon(
-                  MdiIcons.account,
-                  color: Colors.black,
-                )),
-          ],
-          currentIndex: selectedIndex,
-          fixedColor: Colors.deepPurple,
-          onTap: onItemTapped,
-        ),
+       
       ),
     );
   }

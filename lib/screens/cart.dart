@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:society/screens/categories.dart';
+import 'package:society/screens/screen12.dart';
+import 'myProducts.dart';
+
 class Cart extends StatefulWidget {
   @override
   _CartState createState() => _CartState();
 }
+
 List<String> cartchoices = [
   "All",
   "Boutique"
 ];
+
 int val1 = 5;
 int val2 = 7;
+
 class _CartState extends State<Cart> {
 
   @override
@@ -49,7 +55,8 @@ class _CartState extends State<Cart> {
                 Container(
                   height: 55,
                   // margin: EdgeInsets.all(15.0),
-                  child: new ListView.builder(itemCount: cartchoices.length , itemBuilder:(BuildContext context, int i){
+                  child: new ListView.builder(itemCount: cartchoices.length , 
+                  itemBuilder:(BuildContext context, int i){
                     return Padding(
                         padding: const EdgeInsets.fromLTRB(10.0,10.0,40.0,10.0),
                         child: SizedBox(
@@ -93,8 +100,9 @@ class _CartState extends State<Cart> {
               width: wid*0.95,
               color: Colors.black,
               child: RaisedButton(onPressed: (){
-
-                //Move to
+                 Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Screen12()));
               },
                 color : Colors.black,
               child: new Row(

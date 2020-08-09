@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:society/screens/selectSociety.dart';
+
+import 'profilepage.dart';
 
 class AccountPage extends StatefulWidget {
   @override
@@ -10,27 +13,27 @@ class _AccountPageState extends State<AccountPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
+      // bottomNavigationBar: BottomNavigationBar(
+      //   type: BottomNavigationBarType.fixed,
 
-        currentIndex: 0, // this will be set when a new tab is tapped
-        items: [
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.shopping_basket),
-            title: new Text('Buy'),
-          ),
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.store),
-            title: new Text('My Store'),
-          ),
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.mail),
-            title: new Text('My Orders'),
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person), title: Text('Account'))
-        ],
-      ),
+      //   currentIndex: 0, // this will be set when a new tab is tapped
+      //   items: [
+      //     BottomNavigationBarItem(
+      //       icon: new Icon(Icons.shopping_basket),
+      //       title: new Text('Buy'),
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: new Icon(Icons.store),
+      //       title: new Text('My Store'),
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: new Icon(Icons.mail),
+      //       title: new Text('My Orders'),
+      //     ),
+      //     BottomNavigationBarItem(
+      //         icon: Icon(Icons.person), title: Text('Account'))
+      //   ],
+      // ),
       body: Container(
         child: SingleChildScrollView(
           child: Column(
@@ -43,7 +46,7 @@ class _AccountPageState extends State<AccountPage> {
                       height: 140,
                       width: 140,
                       child: Image.asset(
-                        "assets/dummyprofile.jpeg",
+                        "assets/dummyprofile.jpg",
                         fit: BoxFit.fill,
                       ),
                     ),
@@ -75,7 +78,10 @@ class _AccountPageState extends State<AccountPage> {
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  print("Clicked");
+                   Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProfilePage()),
+            );
                 },
                 child: Row(
                   children: <Widget>[
@@ -112,8 +118,12 @@ class _AccountPageState extends State<AccountPage> {
               ),
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  print("Clicked");
+                onTap:(){Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => SelectSocietyPage(),
+    ),
+                );
+              
                 },
                 child: Row(
                   children: <Widget>[
@@ -151,7 +161,7 @@ class _AccountPageState extends State<AccountPage> {
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  print("Clicked");
+                  Navigator.pop(context);
                 },
                 child: Row(
                   children: <Widget>[

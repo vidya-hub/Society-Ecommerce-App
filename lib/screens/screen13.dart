@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:society/screens/add_store.dart';
 import '../screens/add_store.dart';
+import 'add_product_screen.dart';
 
 class Screen13 extends StatefulWidget {
   @override
@@ -22,34 +23,34 @@ class _Screen13State extends State<Screen13> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.black,
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.card_travel, color: Colors.black),
-              title:
-                  new Text("Buy", style: new TextStyle(color: Colors.black))),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.store, color: Colors.black),
-              title: new Text("My Store",
-                  style: new TextStyle(color: Colors.black))),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.format_list_bulleted,
-                color: Colors.black,
-              ),
-              title: new Text("My Order",
-                  style: new TextStyle(color: Colors.black))),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.person,
-                color: Colors.black,
-              ),
-              title: new Text("Profile",
-                  style: new TextStyle(color: Colors.black))),
-        ],
-      ),
+      // bottomNavigationBar: BottomNavigationBar(
+      //   type: BottomNavigationBarType.fixed,
+      //   selectedItemColor: Colors.black,
+      //   items: [
+      //     BottomNavigationBarItem(
+      //         icon: Icon(Icons.card_travel, color: Colors.black),
+      //         title:
+      //             new Text("Buy", style: new TextStyle(color: Colors.black))),
+      //     BottomNavigationBarItem(
+      //         icon: Icon(Icons.store, color: Colors.black),
+      //         title: new Text("My Store",
+      //             style: new TextStyle(color: Colors.black))),
+      //     BottomNavigationBarItem(
+      //         icon: Icon(
+      //           Icons.format_list_bulleted,
+      //           color: Colors.black,
+      //         ),
+      //         title: new Text("My Order",
+      //             style: new TextStyle(color: Colors.black))),
+      //     BottomNavigationBarItem(
+      //         icon: Icon(
+      //           Icons.person,
+      //           color: Colors.black,
+      //         ),
+      //         title: new Text("Profile",
+      //             style: new TextStyle(color: Colors.black))),
+      //   ],
+      // ),
       body: Container(
         child: SingleChildScrollView(
           child: Column(
@@ -147,7 +148,7 @@ class _Screen13State extends State<Screen13> {
                     ),
                     onPressed: () {
                        Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => AddStore()));
+                        MaterialPageRoute(builder: (context) =>AddProductScreen()));
                     },
                     color: Colors.green[700],
                   ),

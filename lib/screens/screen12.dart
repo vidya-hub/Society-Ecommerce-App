@@ -3,12 +3,12 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import '../screens/screen20.dart';
 import '../utils/widgetCart.dart';
 
-class Cart extends StatefulWidget {
+class Screen12 extends StatefulWidget {
   @override
-  _CartState createState() => _CartState();
+  _Screen12State createState() => _Screen12State();
 }
 
-class _CartState extends State<Cart> {
+class _Screen12State extends State<Screen12> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

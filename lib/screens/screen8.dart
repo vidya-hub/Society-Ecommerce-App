@@ -1,15 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:society/screens/add_store.dart';
 import 'package:society/screens/orderDetails.dart';
 import 'package:society/screens/profilepage.dart';
 import '../screens/screen13.dart';
+import 'accountPage.dart';
+import 'cart.dart';
+import 'findSociety.dart';
 
 List<String> categories = ["All", "Boutique", "Groceries", "jkbkb "];
 List<Widget> _widgetList = [
   Screen8_wid(),
-  Screen13(),
+  AddStore(),
   OrderDetails(),
-  ProfilePage()
+  AccountPage()
 ];
 
 int _currentIndex = 0;
@@ -193,7 +197,10 @@ Widget Address(String socname, String state, String city, double width) {
           ],
         ),
         RawMaterialButton(
-          onPressed: () {},
+    //       onPressed: () {
+    //         Navigator.push(context,
+    // MaterialPageRoute(builder: (context) => FindSociety()));
+    //       },
           fillColor: Colors.grey[300],
           child: Icon(
             Icons.search,
@@ -217,7 +224,7 @@ Container card(double width, BuildContext context) {
           Expanded(
             child: GestureDetector(
               onTap: () {
-                //Navigator.push(context, MaterialPageRoute(builder: (context)=>Cart() ));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>Cart() ));
               },
               child: new Container(
                 height: 200,

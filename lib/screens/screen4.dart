@@ -38,8 +38,8 @@ class _Screen4State extends State<Screen4> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Container(
-        child: Column(
+      body: ListView(
+        children:<Widget>[ Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             SizedBox(
@@ -131,6 +131,7 @@ class _Screen4State extends State<Screen4> {
             )
           ],
         ),
+        ],
       ),
     );
   }
