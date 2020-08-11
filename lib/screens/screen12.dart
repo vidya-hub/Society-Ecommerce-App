@@ -8,23 +8,12 @@ class Screen12 extends StatefulWidget {
   _Screen12State createState() => _Screen12State();
 }
 
+int val1 = 1, val2 = 5;
+
 class _Screen12State extends State<Screen12> {
-
-  int _n = 0;
-void add() {
-  setState(() {
-    _n++;
-  });
-}
-
-void minus() {
-  setState(() {
-    if (_n != 0) 
-      _n--;
-  });
-}
   @override
   Widget build(BuildContext context) {
+    int currentValue;
     return Scaffold(
       body: ListView(
         children: <Widget>[
@@ -97,51 +86,68 @@ void minus() {
               ),
               Padding(padding: EdgeInsets.only(left: 40)),
               Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text("Blouse Fitting", style: TextStyle(fontSize: 18)),
-                    Padding(padding: EdgeInsets.symmetric(vertical: 4)),
-                    Text("Rs 200", style: TextStyle(fontSize: 16)),
-                    Padding(padding: EdgeInsets.symmetric(vertical: 15)),
-                    Row(
-                      children: <Widget>[
-                        Container(
-                          padding: const EdgeInsets.only(left: 12, right: 12),
-
-                          decoration:
-                              myBoxDecoration(),
-                              child:GestureDetector(
-                                onTap: minus,
-                               
-                          child: Text(
-                            "-",
-                            style: TextStyle(fontSize: 25.0),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text("Blouse Fitting", style: TextStyle(fontSize: 18)),
+                  Padding(padding: EdgeInsets.symmetric(vertical: 4)),
+                  Text("Rs 200", style: TextStyle(fontSize: 16)),
+                  Padding(padding: EdgeInsets.symmetric(vertical: 15)),
+                  //
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        width: 30,
+                        height: 25,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          border:
+                              Border.all(width: 1.5, color: Colors.red[500]),
+                        ),
+                        child: new InkWell(
+                          child: Icon(
+                            Icons.remove,
                           ),
+                          onTap: () {
+                            currentValue = val1;
+                            setState(() {
+                              currentValue--;
+                              val1 = (currentValue >= 0 ? currentValue : 0);
+                            });
+                          },
                         ),
                       ),
-                        Padding(padding: EdgeInsets.only(left: 15)),
-                        Text(
-                          '$_n',
-                          style: TextStyle(fontSize: 18),
+                      Padding(padding: EdgeInsets.only(left: 15)),
+                      new Text(
+                        "$val1",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      Padding(padding: EdgeInsets.only(left: 15)),
+                      Container(
+                        width: 30,
+                        height: 25,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          border:
+                              Border.all(width: 1.5, color: Colors.green[500]),
                         ),
-                        Padding(padding: EdgeInsets.only(left: 15)),
-                         Container(
-                          padding: const EdgeInsets.only(left: 12, right: 12),
-
-                          decoration:
-                              myBox2Decoration(),
-                              child:GestureDetector(
-                                onTap:
-                                  add, //       <--- BoxDecoration here
-                          child: Text(
-                            "+",
-                            style: TextStyle(fontSize: 25.0),
+                        child: new InkWell(
+                          child: Icon(
+                            Icons.add,
                           ),
+                          onTap: () {
+                            currentValue = val1;
+                            setState(() {
+                              currentValue++;
+                              val1 = (currentValue >= 0 ? currentValue : 0);
+                            });
+                          },
                         ),
-                         )
-                      ],
-                    )
-                  ])
+                      ),
+                    ],
+                  ),
+                  //
+                ],
+              ),
             ],
           ),
           Padding(
@@ -160,51 +166,66 @@ void minus() {
               ),
               Padding(padding: EdgeInsets.only(left: 40)),
               Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text("Blouse Fitting", style: TextStyle(fontSize: 18)),
-                    Padding(padding: EdgeInsets.symmetric(vertical: 4)),
-                    Text("Rs 200", style: TextStyle(fontSize: 16)),
-                    Padding(padding: EdgeInsets.symmetric(vertical: 15)),
-                    Row(
-                      children: <Widget>[
-                         Container(
-                          padding: const EdgeInsets.only(left: 12, right: 12),
-
-                          decoration:
-                              myBoxDecoration(),
-                              child:GestureDetector(
-                                onTap: minus,
-                               
-                          child: Text(
-                            "-",
-                            style: TextStyle(fontSize: 25.0),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text("Blouse Fitting", style: TextStyle(fontSize: 18)),
+                  Padding(padding: EdgeInsets.symmetric(vertical: 4)),
+                  Text("Rs 200", style: TextStyle(fontSize: 16)),
+                  Padding(padding: EdgeInsets.symmetric(vertical: 15)),
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        width: 30,
+                        height: 25,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          border:
+                              Border.all(width: 1.5, color: Colors.red[500]),
+                        ),
+                        child: new InkWell(
+                          child: Icon(
+                            Icons.remove,
                           ),
+                          onTap: () {
+                            currentValue = val2;
+                            setState(() {
+                              currentValue--;
+                              val2 = (currentValue >= 0 ? currentValue : 0);
+                            });
+                          },
                         ),
                       ),
-                        Padding(padding: EdgeInsets.only(left: 15)),
-                        Text(
-                          '$_n',
-                          style: TextStyle(fontSize: 18),
+                      Padding(padding: EdgeInsets.only(left: 15)),
+                      new Text(
+                        "$val2",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      Padding(padding: EdgeInsets.only(left: 15)),
+                      Container(
+                        width: 30,
+                        height: 25,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          border:
+                              Border.all(width: 1.5, color: Colors.green[500]),
                         ),
-                        Padding(padding: EdgeInsets.only(left: 15)),
-                         Container(
-                          padding: const EdgeInsets.only(left: 12, right: 12),
-
-                          decoration:
-                              myBox2Decoration(),
-                              child:GestureDetector(
-                                onTap:
-                                  add, //       <--- BoxDecoration here
-                          child: Text(
-                            "+",
-                            style: TextStyle(fontSize: 25.0),
+                        child: new InkWell(
+                          child: Icon(
+                            Icons.add,
                           ),
+                          onTap: () {
+                            currentValue = val2;
+                            setState(() {
+                              currentValue++;
+                              val2 = (currentValue >= 0 ? currentValue : 0);
+                            });
+                          },
                         ),
-                         )
-                      ],
-                    )
-                  ]),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ],
           ),
           Padding(padding: EdgeInsets.symmetric(vertical: 50)),
@@ -227,21 +248,22 @@ void minus() {
           ),
           Padding(padding: EdgeInsets.symmetric(vertical: 10)),
           new Container(
-              padding: EdgeInsets.only(left: 10, right: 10),
-              height: 50,
-              child: RaisedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Details()),
-                  );
-                },
-                color: Colors.blueGrey[600],
-                shape: new RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5)),
-                child: Text("CONFIRM ORDER AND PAY",
-                    style: TextStyle(fontSize: 18, color: Colors.white)),
-              )),
+            padding: EdgeInsets.only(left: 10, right: 10),
+            height: 50,
+            child: RaisedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Details()),
+                );
+              },
+              color: Colors.blueGrey[600],
+              shape: new RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5)),
+              child: Text("CONFIRM ORDER AND PAY",
+                  style: TextStyle(fontSize: 18, color: Colors.white)),
+            ),
+          ),
         ],
       ),
     );
