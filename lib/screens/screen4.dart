@@ -4,6 +4,12 @@ import 'package:society/screens/selectSociety.dart';
 import 'package:society/screens/welcome.dart';
 
 class Screen4 extends StatefulWidget {
+    final String phone_no;
+
+    const Screen4({
+    Key key,
+    this.phone_no,
+  });
   @override
   _Screen4State createState() => _Screen4State();
 }
@@ -11,6 +17,9 @@ class Screen4 extends StatefulWidget {
 class _Screen4State extends State<Screen4> {
   final _auth = FirebaseAuth.instance;
   FirebaseUser log_user;
+  
+  String type;
+
   @override
   void initState() {
     get_user();
@@ -71,10 +80,13 @@ class _Screen4State extends State<Screen4> {
                       fontSize: 20),
                 ),
                 onPressed: () {
+                  type = "seller";
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => SelectSocietyPage()));
+                          builder: (context) => SelectSocietyPage(
+                             phone_no: widget.phone_no, type: type
+                          )));
                 },
                 color: Colors.greenAccent[400],
               ),
@@ -97,10 +109,14 @@ class _Screen4State extends State<Screen4> {
                       fontSize: 20),
                 ),
                 onPressed: () {
+                    type = "buyer";
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SelectSocietyPage(),
+                      builder: (context) => SelectSocietyPage(
+                         phone_no: widget.phone_no, type: type
+                      ),
                     ),
                   );
                 },

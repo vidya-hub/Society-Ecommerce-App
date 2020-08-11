@@ -630,7 +630,7 @@ List<String> city = [
   "Zunheboto"
 ];
 
-List<String> state = [
+List<String> states = [
   "Andhra Pradesh",
   "Arunachal Pradesh ",
   "Assam",

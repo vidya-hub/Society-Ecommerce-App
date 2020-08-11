@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:society/screens/add_product_screen.dart';
 
 class Screen16 extends StatefulWidget {
   @override
@@ -39,7 +40,7 @@ class _Screen16State extends State<Screen16> {
                     style: TextStyle(fontSize: 26),
                   ),
                   SizedBox(
-                    width: 82,
+                    width: 40,
                   ),
                   Text(
                     "Rs " + price.toString(),
@@ -81,7 +82,12 @@ class _Screen16State extends State<Screen16> {
                       height: 50,
                       child: RaisedButton(
                         child: Text('EDIT'),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddProductScreen()),
+                );
+                        },
                         color: Colors.greenAccent,
                       )),
                   SizedBox(

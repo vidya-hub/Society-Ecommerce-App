@@ -3,7 +3,13 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 import 'package:society/screens/add_product_screen.dart';
+import 'package:society/screens/screen13.dart';
 import 'package:society/screens/screen16.dart';
+
+class Item {
+  const Item(this.name);
+  final String name;
+}
 
 class AddStore extends StatefulWidget {
   @override
@@ -15,6 +21,26 @@ class _AddStoreState extends State<AddStore> {
   final _nameController = TextEditingController(text: '');
   File _image;
   final picker = ImagePicker();
+  Item selectedUser;
+  
+  List<Item> users = <Item>[
+    const Item(
+      'Boutique',
+    ),
+    const Item(
+      'Groceries',
+    ),
+     const Item(
+      'Gadgets',
+    ),
+    const Item(
+      'Games',
+    ),
+     const Item(
+      'Books',
+    ),
+   
+  ];
 
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
@@ -132,30 +158,75 @@ class _AddStoreState extends State<AddStore> {
                     height: 70,
                   ),
                   Padding(
-                      padding: const EdgeInsets.only(left: 10.0, top: 80.0),
-                      child: Container(
-                          height: 40,
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              color: Colors.green,
-                              borderRadius: BorderRadius.circular(25)),
-                          child: Text(
-                            'Choose store category',
-                            style: TextStyle(
-                              fontSize: 17,
-                              color: Colors.black,
+                      padding: const EdgeInsets.only(left: 10.0,),
+                      child:  Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
+                    ),
+                    child: Container(
+                      width: 370,
+                      height: 60,
+                      decoration: new BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: new BorderRadius.circular(10),
+                          border: Border.all(color: Colors.lightGreen, width: 2)),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(children: <Widget>[
+                            Expanded(
+                              child: Text(
+                                "Store Category *",
+                                style: TextStyle(fontSize: 17,fontFamily: "Times new Roman"),
+                                textAlign: TextAlign.left,
+                              ),
                             ),
-                          ))),
+                            Expanded(
+                              child: Center(
+                                child: DropdownButton<Item>(
+                                  hint: Text(
+                                    'Select Catagory',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  value: selectedUser,
+                                  onChanged: (Item Value) {
+                                    setState(() {
+                                      selectedUser = Value;
+                                    });
+                                  },
+                                  items: users.map((Item user) {
+                                    return DropdownMenuItem<Item>(
+                                      value: user,
+                                      child: Row(children: <Widget>[
+                                        Text(
+                                          user.name,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontFamily: "GentiumBasic"),
+                                        ),
+                                      ]),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ),
+                          ]),
+                        ),
+                      ),
+                    ),
+                  ),
+                  ),
                 ]),
-            Spacer(),
-            Container(
+            Padding(padding: EdgeInsets.only(top:60),
+           child: Container(
               width: MediaQuery.of(context).size.width,
               child: RaisedButton(
                 color: Color.fromRGBO(1, 44, 50, 0.8),
                 onPressed: () {
                    Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => Screen16()),
+    MaterialPageRoute(builder: (context) => Screen13()),
   );
                 },
                 child: Text(
@@ -166,6 +237,7 @@ class _AddStoreState extends State<AddStore> {
                       fontSize: 18),
                 ),
               ),
+            ),
             ),
           ],
         ),

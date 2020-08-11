@@ -2,15 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:society/screens/buyerorseller.dart';
 import 'package:society/screens/screen4.dart';
 
-class OtpConfirmedPage extends StatelessWidget {
 
+  class OtpConfirmedPage extends StatefulWidget {
+     final String phone_no;
+
+  const OtpConfirmedPage({
+    Key key,
+    this.phone_no,
+  });
   
-
-
-
   @override
+  _OtpConfirmedPageState createState() => _OtpConfirmedPageState();
+}
 
-  
+class _OtpConfirmedPageState extends State<OtpConfirmedPage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(seconds: 2),(){
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Screen4()));
+    });
+  }
+
+
+   @override
+
   Widget build(BuildContext context) {
     bool _value = false;
 
@@ -38,17 +54,18 @@ class OtpConfirmedPage extends StatelessWidget {
               SizedBox(
                 height: 30.0,
               ),
-              GestureDetector(
-                              child: Text(
+              // GestureDetector(
+                            //  child:
+                               Text(
                   "Confirmed",
                   style: TextStyle(color: Colors.black, fontSize: 30.0),
         
                 ),
-                onTap: (){
-                   Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Screen4()));
-                },
-              ),
+                // onTap: (){
+                //    Navigator.push(context,
+                //         MaterialPageRoute(builder: (context) => Screen4()));
+                // },
+              //),
             ],
           ),
         ),

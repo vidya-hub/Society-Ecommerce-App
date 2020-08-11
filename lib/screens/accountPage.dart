@@ -4,36 +4,42 @@ import 'package:society/screens/selectSociety.dart';
 import 'profilepage.dart';
 
 class AccountPage extends StatefulWidget {
+  var number;
+  AccountPage({this.number});
   @override
   _AccountPageState createState() => _AccountPageState();
 }
 
 class _AccountPageState extends State<AccountPage> {
   @override
+  //   void initState() {
+  //   print("${widget.number} phone no");
+  //   get_data();
+  //   super.initState();
+  // }
+
+  // final _store = Firestore.instance.collection("users");
+
+  // get_data() async {
+  //   var _data = await _store.document(widget.number).snapshots();
+
+  //   await for (var datastream in _data) {
+  //     setState(() {
+  //       address = datastream["address"];
+  //       state = datastream["state"];
+  //       society_name = datastream["societyname"];
+  //     });
+  //     print(address);
+  //     print(state);
+  //     print(society_name);
+  //     Address(address, state, society_name, MediaQuery.of(context).size.width,
+  //         context);
+  //   }
+  // }
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // bottomNavigationBar: BottomNavigationBar(
-      //   type: BottomNavigationBarType.fixed,
-
-      //   currentIndex: 0, // this will be set when a new tab is tapped
-      //   items: [
-      //     BottomNavigationBarItem(
-      //       icon: new Icon(Icons.shopping_basket),
-      //       title: new Text('Buy'),
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: new Icon(Icons.store),
-      //       title: new Text('My Store'),
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: new Icon(Icons.mail),
-      //       title: new Text('My Orders'),
-      //     ),
-      //     BottomNavigationBarItem(
-      //         icon: Icon(Icons.person), title: Text('Account'))
-      //   ],
-      // ),
       body: Container(
         child: SingleChildScrollView(
           child: Column(

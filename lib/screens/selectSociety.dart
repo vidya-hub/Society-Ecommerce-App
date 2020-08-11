@@ -1,9 +1,25 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:society/models/SocietyModel.dart';
 import 'package:society/screens/profilepage.dart';
 import 'package:society/screens/welcome.dart';
 import 'package:society/utils/citystatelist.dart';
 
+final usersRef = Firestore.instance.collection('users');
+
+class Item {
+  const Item(this.name, this.icon);
+  final String name;
+  final Icon icon;
+}
+
 class SelectSocietyPage extends StatefulWidget {
+   final String phone_no;
+  final String type;
+  const SelectSocietyPage({Key key, this.phone_no, this.type});
+
   @override
   _SelectSocietyPageState createState() => _SelectSocietyPageState();
 }
@@ -13,8 +29,34 @@ class _SelectSocietyPageState extends State<SelectSocietyPage> {
   String address;
   final addressController = TextEditingController(text: '');
   String _selectedstate;
+  String _selectsociety;
   String society;
   final societyController = TextEditingController(text: '');
+  SocietyModel societyModel;
+
+
+  final _auth = FirebaseAuth.instance;
+  FirebaseUser log_user;
+  String type;
+
+ @override
+  void initState() {
+    // get_user();
+    // get_id();
+    print("init");
+    super.initState();
+  }
+
+  List<Item> users = <Item>[
+    const Item(
+      'Add',
+      Icon(MdiIcons.plusCircleOutline),
+    ),
+    const Item(
+      'Swetha Jewels',
+      Icon(MdiIcons.laserPointer),
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -90,12 +132,24 @@ class _SelectSocietyPageState extends State<SelectSocietyPage> {
                       _selectedcity = newValue;
                     });
                   },
-                  items: city.map((location) {
-                    return DropdownMenuItem(
-                      child: Text(location),
-                      value: location,
-                    );
-                  }).toList(),
+                  items: users.map((Item user) {
+                                    return DropdownMenuItem<Item>(
+                                      value: user,
+                                      child: Row(children: <Widget>[
+                                        user.icon,
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          user.name,
+                                          style: TextStyle(
+                                              color: Colors.blue,
+                                              fontSize: 16,
+                                              fontFamily: "GentiumBasic"),
+                                        ),
+                                      ]),
+                                    );
+                                  }).toList(),
                 ),
               ),
               Container(
@@ -113,30 +167,68 @@ class _SelectSocietyPageState extends State<SelectSocietyPage> {
                   ],
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 10, right: 10, bottom: 5),
-                child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 5),
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(color: Colors.black)),
-                  child: TextFormField(
-                    cursorColor: Colors.black,
-                    // validator: valiadetName,
-                    onSaved: (value) {
-                      society = value;
-                    },
-                    keyboardType: TextInputType.text,
-                    controller: societyController,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                    ),
-                  ),
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(color: Colors.black)),
+                margin: EdgeInsets.symmetric(vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: DropdownButton(
+                  isExpanded: true,
+                  hint: Text(
+                      'Enter your society'), // Not necessary for Option 1
+                  value: _selectsociety,
+                  onChanged: (newValue) {
+                    setState(() {
+                      _selectsociety = newValue;
+                    });
+                  },
+                  items:  users.map((Item user) {
+                                    return DropdownMenuItem<Item>(
+                                      value: user,
+                                      child: Row(children: <Widget>[
+                                        user.icon,
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          user.name,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                             ),
+                                        ),
+                                      ]),
+                                    );
+                                  }).toList(),
                 ),
               ),
+              // Padding(
+              //   padding: EdgeInsets.only(left: 10, right: 10, bottom: 5),
+              //   child: Container(
+              //     margin: EdgeInsets.symmetric(vertical: 5),
+              //     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              //     width: MediaQuery.of(context).size.width * 0.8,
+              //     decoration: BoxDecoration(
+              //         color: Colors.white,
+              //         borderRadius: BorderRadius.circular(5),
+              //         border: Border.all(color: Colors.black)),
+              //     child: TextFormField(
+              //       cursorColor: Colors.black,
+              //       // validator: valiadetName,
+              //       onSaved: (value) {
+              //         society = value;
+              //       },
+              //       keyboardType: TextInputType.text,
+              //       controller: societyController,
+              //       decoration: InputDecoration(
+              //         border: InputBorder.none,
+              //       ),
+              //     ),
+              //   ),
+              // ),
               Container(
                 margin: EdgeInsets.symmetric(vertical: 10),
                 padding: EdgeInsets.symmetric(horizontal: 40, vertical: 5),
@@ -210,7 +302,7 @@ class _SelectSocietyPageState extends State<SelectSocietyPage> {
                       _selectedstate = newValue;
                     });
                   },
-                  items: state.map((location) {
+                  items: states.map((location) {
                     return DropdownMenuItem(
                       child: Text(location),
                       value: location,
@@ -239,7 +331,10 @@ class _SelectSocietyPageState extends State<SelectSocietyPage> {
                   color: Color.fromRGBO(1, 44, 50, 0.8),
                   onPressed: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => ProfilePage()));
+                        MaterialPageRoute(builder: (context) => ProfilePage(
+                           phone_no: widget.phone_no,
+
+                        )));
                   },
                 ),
               )

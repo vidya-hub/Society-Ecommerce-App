@@ -9,6 +9,20 @@ class Screen12 extends StatefulWidget {
 }
 
 class _Screen12State extends State<Screen12> {
+
+  int _n = 0;
+void add() {
+  setState(() {
+    _n++;
+  });
+}
+
+void minus() {
+  setState(() {
+    if (_n != 0) 
+      _n--;
+  });
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,29 +109,36 @@ class _Screen12State extends State<Screen12> {
                           padding: const EdgeInsets.only(left: 12, right: 12),
 
                           decoration:
-                              myBoxDecoration(), //       <--- BoxDecoration here
+                              myBoxDecoration(),
+                              child:GestureDetector(
+                                onTap: minus,
+                               
                           child: Text(
                             "-",
                             style: TextStyle(fontSize: 25.0),
                           ),
                         ),
+                      ),
                         Padding(padding: EdgeInsets.only(left: 15)),
                         Text(
-                          "1",
+                          '$_n',
                           style: TextStyle(fontSize: 18),
                         ),
                         Padding(padding: EdgeInsets.only(left: 15)),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 2, horizontal: 10),
+                         Container(
+                          padding: const EdgeInsets.only(left: 12, right: 12),
 
                           decoration:
-                              myBox2Decoration(), //       <--- BoxDecoration here
+                              myBox2Decoration(),
+                              child:GestureDetector(
+                                onTap:
+                                  add, //       <--- BoxDecoration here
                           child: Text(
                             "+",
-                            style: TextStyle(fontSize: 20.0),
+                            style: TextStyle(fontSize: 25.0),
                           ),
                         ),
+                         )
                       ],
                     )
                   ])
@@ -147,33 +168,40 @@ class _Screen12State extends State<Screen12> {
                     Padding(padding: EdgeInsets.symmetric(vertical: 15)),
                     Row(
                       children: <Widget>[
-                        Container(
+                         Container(
                           padding: const EdgeInsets.only(left: 12, right: 12),
 
                           decoration:
-                              myBoxDecoration(), //       <--- BoxDecoration here
+                              myBoxDecoration(),
+                              child:GestureDetector(
+                                onTap: minus,
+                               
                           child: Text(
                             "-",
                             style: TextStyle(fontSize: 25.0),
                           ),
                         ),
+                      ),
                         Padding(padding: EdgeInsets.only(left: 15)),
                         Text(
-                          "1",
+                          '$_n',
                           style: TextStyle(fontSize: 18),
                         ),
                         Padding(padding: EdgeInsets.only(left: 15)),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 2, horizontal: 10),
+                         Container(
+                          padding: const EdgeInsets.only(left: 12, right: 12),
 
                           decoration:
-                              myBox2Decoration(), //       <--- BoxDecoration here
+                              myBox2Decoration(),
+                              child:GestureDetector(
+                                onTap:
+                                  add, //       <--- BoxDecoration here
                           child: Text(
                             "+",
-                            style: TextStyle(fontSize: 20.0),
+                            style: TextStyle(fontSize: 25.0),
                           ),
                         ),
+                         )
                       ],
                     )
                   ]),

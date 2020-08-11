@@ -8,12 +8,12 @@ import 'accountPage.dart';
 import 'cart.dart';
 import 'findSociety.dart';
 
-List<String> categories = ["All", "Boutique", "Groceries", "jkbkb "];
+List<String> categories = ["All", "Boutique", "Groceries", "Gadgets","Games","Books"];
 List<Widget> _widgetList = [
   Screen8_wid(),
   AddStore(),
   OrderDetails(),
-  AccountPage()
+  AccountPage(),
 ];
 
 int _currentIndex = 0;

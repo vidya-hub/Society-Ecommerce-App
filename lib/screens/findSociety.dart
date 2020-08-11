@@ -6,11 +6,26 @@ import 'dart:convert';
 
 import 'package:society/screens/drawerScreen.dart';
 
-class FindSociety extends StatelessWidget
-{
+class FindSociety extends StatefulWidget {
+  final number;
+  FindSociety({this.number});
+
   static const routeName = '/FindSociety';
-  bool isInSociety = false;
+
   @override
+  _FindSocietyState createState() => _FindSocietyState();
+}
+
+class _FindSocietyState extends State<FindSociety> {
+  bool isInSociety = false;
+
+  @override
+  void initState() {
+    print("${widget.number} phone no");
+    // get_data();
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
@@ -18,7 +33,6 @@ class FindSociety extends StatelessWidget
         iconTheme: new IconThemeData(color: Colors.pink),
         backgroundColor: Color.fromRGBO(254, 243, 244, 1.0),
       ),
-
       drawer: DrawerScreen(),
       body: SingleChildScrollView(
         child: Container(
@@ -26,10 +40,10 @@ class FindSociety extends StatelessWidget
           //color: Color("#fefafb"),
           color: Color.fromRGBO(254, 243, 244, 1.0),
           child: Column(
-            children:[
-              SizedBox(height:20),
+            children: [
+              SizedBox(height: 20),
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   showSearch(context: context, delegate: DataSearch());
                 },
                 child: Container(
@@ -43,7 +57,7 @@ class FindSociety extends StatelessWidget
                   child: Row(
                     children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.only(left:8.0),
+                        padding: const EdgeInsets.only(left: 8.0),
                         child: Text(
                           "Search your Society",
                           style: TextStyle(color: Colors.grey),
@@ -54,27 +68,40 @@ class FindSociety extends StatelessWidget
                       IconButton(
                         icon: Icon(Icons.search),
                         onPressed: () {
-                          showSearch(
-                              context: context, delegate: DataSearch());
+                          showSearch(context: context, delegate: DataSearch());
                         },
                       ),
                     ],
                   ),
                 ),
               ),
-              SizedBox(height:MediaQuery.of(context).size.height/12),
+              SizedBox(height: MediaQuery.of(context).size.height / 12),
               Container(
-                child: Text("Find your society here",style: TextStyle(fontSize: 26),),
+                child: Text(
+                  "Find your society here",
+                  style: TextStyle(fontSize: 26),
+                ),
               ),
-
-              SizedBox(height: 20,),
-              Text("OR",style: TextStyle(fontSize: 26,fontWeight: FontWeight.w900)),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
+              Text("OR",
+                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.w900)),
+              SizedBox(
+                height: 20,
+              ),
               Container(
                 child: GestureDetector(
-                  onTap: (){
-                    Navigator.of(context).pushNamed(AddSociety.routeName);
-                    //showSearch(context: context, delegate: DataSearch());
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddSociety(
+                        //  number: widget.number
+                          ),
+                      ),
+                    );
+                    // showSearch(context: context, delegate: DataSearch());
                   },
                   child: Column(
                     children: <Widget>[
@@ -82,18 +109,19 @@ class FindSociety extends StatelessWidget
                         height: 150,
                         width: 100,
                         child: Image.asset(
-                            "assets/add-group.png",
+                          "assets/add-group.png",
                           //fit: BoxFit.cover,
                         ),
                       ),
-                      Text("Add your society now!",style: TextStyle(fontSize: 32,fontWeight: FontWeight.w900)),
+                      Text(
+                        "Add your society now!",
+                        style: TextStyle(
+                            fontSize: 32, fontWeight: FontWeight.w900),
+                      ),
                     ],
                   ),
                 ),
               ),
-
-
-
             ],
           ),
         ),
@@ -131,46 +159,45 @@ class DataSearch extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    List<String> searchNames = ["Shivam society1","Shivam society 2"];
+    List<String> searchNames = ["Shivam society1", "Shivam society 2"];
 
     return searchNames.isEmpty
-    ?ListTile(
-      onTap: (){},
-      leading: CircleAvatar(
-        backgroundColor: Colors.green,
-        radius: 15,
-        child: ClipOval(
-          child:Icon(
-            Icons.add,
-            color: Colors.black,
-            size: 24,
-          ),
-        ),
-      ),
-      title: Text("Add your society ",style: TextStyle(fontWeight: FontWeight.bold),),
-    )
-    :ListView.builder(
-      itemBuilder: (context,i)=>
-        ListTile(
-          onTap: (){},
-          leading: Container(
-            child: CircleAvatar(
-              radius: 70,
+        ? ListTile(
+            onTap: () {},
+            leading: CircleAvatar(
+              backgroundColor: Colors.green,
+              radius: 15,
               child: ClipOval(
-                child: Icon(Icons.business),
+                child: Icon(
+                  Icons.add,
+                  color: Colors.black,
+                  size: 24,
+                ),
               ),
             ),
-          ),
-          title: Text(searchNames[i]),
-        ),
-      itemCount: searchNames.length,
-    );
-
-
-
+            title: Text(
+              "Add your society ",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          )
+        : ListView.builder(
+            itemBuilder: (context, i) => ListTile(
+              onTap: () {},
+              leading: Container(
+                child: CircleAvatar(
+                  radius: 70,
+                  child: ClipOval(
+                    child: Icon(Icons.business),
+                  ),
+                ),
+              ),
+              title: Text(searchNames[i]),
+            ),
+            itemCount: searchNames.length,
+          );
 
     ListTile(
-      onTap: (){},
+      onTap: () {},
       leading: Container(
         child: CircleAvatar(
           radius: 70,

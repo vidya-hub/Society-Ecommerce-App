@@ -23,8 +23,8 @@ class _AddSocietyState extends State<AddSociety> {
   @override
   void initState() {
     super.initState();
-    // _selectedLocation = _locations[0];
-    // _selectedstate = _state[0];
+  //  _selectedLocation = _locations[0];
+  //  _selectedstate = _state[0];
   }
 
   @override
@@ -168,12 +168,12 @@ class _AddSocietyState extends State<AddSociety> {
                                   _selectedstate = newValue;
                                 });
                               },
-                              items: state.map((state) {
-                                return DropdownMenuItem(
-                                  child: new Text(state),
-                                  value: state,
-                                );
-                              }).toList(),
+                              items:  states.map((location) {
+                    return DropdownMenuItem(
+                      child: Text(location),
+                      value: location,
+                    );
+                  }).toList(),
                               hint: Text('Please choose a State'),
                               isExpanded: true,
                             ),

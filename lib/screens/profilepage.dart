@@ -1,9 +1,22 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:society/screens/categories.dart';
 import 'package:society/screens/screen8.dart';
 import 'package:society/screens/welcome.dart';
 
+final usersRef = Firestore.instance.collection('users');
+
 class ProfilePage extends StatefulWidget {
+  final String phone_no;
+  const ProfilePage({
+    Key key,
+    this.phone_no,
+  });
+
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -12,6 +25,29 @@ String name;
 final _nameController = TextEditingController(text: '');
 String _selectedGender; // Option 2
 List<String> genderlist = ["Male", "Female", "Others"];
+
+File _image;
+  final picker = ImagePicker();
+  Future getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    // setState(() {
+    //   _image = File(pickedFile.path);
+    // });
+  }
+
+  //  @override
+  // void initState() {
+  //   //super.initState();
+  //   // updateDataInFirestore();
+  // }
+
+  // updateDataInFirestore() async {
+  //   await usersRef
+  //       .document(widget.phone_no)
+  //       .updateData({"gender": _selectedGender, "name": _nameController.text});
+  // }
+
 
 class _ProfilePageState extends State<ProfilePage> {
   @override
@@ -22,24 +58,50 @@ class _ProfilePageState extends State<ProfilePage> {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
+              Padding(padding: EdgeInsets.symmetric(vertical:20)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 80.0),
-                    child: Container(
-                      color: Colors.white,
-                      width: 80,
-                      height: 80,
-
-                      // We will put the network image here for the profile
-                      // This is just a demo image
-                      child: CircleAvatar(
-                        backgroundImage: AssetImage("assets/dummyprofile.jpg"),
-                        radius: 45,
-                      ),
-                    ),
-                  ),
+                   Align(
+                          alignment: Alignment.center,
+                          child: CircleAvatar(
+                            radius: 70.0,
+                            backgroundColor: Colors.black12,
+                            child: _image != null
+                                ? ClipOval(
+                                    child: SizedBox(
+                                      height: 130,
+                                      width: 130,
+                                      child: Image.file(
+                                        _image,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                  )
+                                : ClipOval(
+                                    child: SizedBox(
+                                    width: 130,
+                                    height: 130,
+                                    child: Image(
+                                      image: AssetImage(
+                                        'assets/dummyprofile.jpg',
+                                      ),
+                                      fit: BoxFit.fill,
+                                    ),
+                                  )),
+                          )),
+                      Padding(
+                          padding: EdgeInsets.only(top: 60.0),
+                          child: IconButton(
+                            icon: Icon(
+                              FontAwesomeIcons.camera,
+                              size: 30.0,
+                              color: Colors.black,
+                            ),
+                            onPressed: () {
+                              getImage();
+                            },
+                          )),
                 ],
               ),
               Row(
@@ -160,6 +222,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   // color: Colors.white,
                   color: Color.fromRGBO(1, 44, 50, 0.8),
                   onPressed: () {
+                      // updateDataInFirestore();
+
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => Screen8()));
                   },

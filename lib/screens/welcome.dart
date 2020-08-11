@@ -1,8 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:society/models/SocietyModel.dart';
 import 'package:society/screens/otp.dart';
 import 'package:society/screens/otpconfirmed.dart';
+import 'package:society/screens/screen8.dart';
+
+final usersRef = Firestore.instance.collection('users');
 
 class WelcomePage extends StatefulWidget {
   @override
@@ -13,6 +17,28 @@ class _WelcomePageState extends State<WelcomePage> {
   static const routeName = '/WelcomePage';
   String _number, verification_id;
   final _phoneController = TextEditingController(text: '');
+  SocietyModel societyModel;
+
+  @override
+  void initState() {
+    getUsers(_phoneController.text);
+    super.initState();
+  }
+
+  getUsers(String number) async {
+    final QuerySnapshot snapshot =
+        await usersRef.where("number", isEqualTo: number).getDocuments();
+    snapshot.documents.forEach((DocumentSnapshot doc) {
+      if (doc.exists) {
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => Screen8(number:number),
+        //   ),
+        // );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,17 +150,19 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   Future<void> verify(phone_no) async {
-    final PhoneVerificationCompleted verified = (AuthCredential authResult) async {
+    getUsers(phone_no);
+    final PhoneVerificationCompleted verified =
+        (AuthCredential authResult) async {
       print(authResult.providerId);
-       await Firestore.instance
-          .collection(phone_no)
-          .document("demodata")
-          .setData({"data": "demodata"});        
-      print("verified");
+      //  await Firestore.instance
+      //     .collection(phone_no)
+      //     .document("demodata")
+      //     .setData({"data": "demodata"});
+      // print("verified");
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => OtpConfirmedPage(),
+          builder: (context) => OtpConfirmedPage(phone_no: phone_no),
         ),
       );
     };
@@ -145,7 +173,7 @@ class _WelcomePageState extends State<WelcomePage> {
       print("${excep.code}");
     };
     final PhoneCodeSent smssent = (String verId, [int forceresend]) async {
-      this.verification_id = verId;      
+      this.verification_id = verId;
       print("sms is sent");
       print(verId);
       print(verification_id);
@@ -175,3 +203,4 @@ class _WelcomePageState extends State<WelcomePage> {
     );
   }
 }
+

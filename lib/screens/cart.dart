@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:society/screens/categories.dart';
 import 'package:society/screens/screen12.dart';
+import 'package:society/utils/widgetCart.dart';
 import 'myProducts.dart';
 
 class Cart extends StatefulWidget {
@@ -9,14 +10,31 @@ class Cart extends StatefulWidget {
 }
 
 List<String> cartchoices = [
-  "All",
-  "Boutique"
+  "All","Boutique" ,"Groceries", "Gadgets","Games","Books"
 ];
 
-int val1 = 5;
-int val2 = 7;
+int val1 = 0;
+int val2 = 0;
+
 
 class _CartState extends State<Cart> {
+  
+  void minus(val) {
+    setState(
+      () {
+        if (val != 0) val -= 1;
+      },
+    );
+  }
+
+  void plus(val) {
+    setState(
+      () {
+        if (val != 0) val += 1;
+      },
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -58,10 +76,10 @@ class _CartState extends State<Cart> {
                   child: new ListView.builder(itemCount: cartchoices.length , 
                   itemBuilder:(BuildContext context, int i){
                     return Padding(
-                        padding: const EdgeInsets.fromLTRB(10.0,10.0,40.0,10.0),
+                        padding: const EdgeInsets.fromLTRB(10.0,10.0,10.0,10.0),
                         child: SizedBox(
                           height: 80,
-                          width: 90,
+                          width: 100,
                           child: RaisedButton(
                             autofocus: true,
                             color: Colors.white,
@@ -133,7 +151,11 @@ class _CartState extends State<Cart> {
   }
 }
 
+
+
 Container card1(double width, int value){
+  
+
   return Container(
       height: 300,
       width: width/2,
@@ -143,16 +165,12 @@ Container card1(double width, int value){
             children: [
 
               Expanded(
-                child: new Container(
-                  height: 200,
-                  width: width/2 ,
-                  color: Colors.grey,
-                ),
-//            child: new Image.asset('assets/user.png',
-//              height: 200,
-//              width: width/2 ,
-//              fit: BoxFit.cover,
-//            ),
+               
+           child: new Image.asset('assets/user.png',
+             height: 200,
+             width: width/2 ,
+             fit: BoxFit.cover,
+           ),
               ),
               new ListTile(
                 title: new Text("Amul butter",
@@ -164,17 +182,30 @@ Container card1(double width, int value){
               ),
               new Row(
                 children: <Widget>[
-                  new IconButton(icon: Icon(Icons.arrow_left, color:  Colors.black,), onPressed: (){
-                    //decrement value
-                  }),
-                  new Text('$value',
-                  style: TextStyle(
+                  
+                        new IconButton(
+                  icon: Icon(
+                    Icons.arrow_left,
                     color: Colors.black,
-                    fontWeight: FontWeight.bold
-                  ),),
-                  new IconButton(icon: Icon(Icons.arrow_right, color:  Colors.black,), onPressed: (){
-                    //decrement value
+                  ),
+                  onPressed: () {
+                    
                   }),
+              new Text(
+                '$value',
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              ),
+              new IconButton(
+                icon: Icon(
+                  Icons.arrow_right,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  
+                },
+              ),
+            
                 ],
               )
             ]),

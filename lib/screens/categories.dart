@@ -1,7 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:society/screens/cart.dart';
 class Categories extends StatefulWidget {
+  
+  var number;
+  Categories({Key: Key, this.number});
+
   @override
   _CategoriesState createState() => _CategoriesState();
 }
@@ -9,16 +14,44 @@ List<String> categories = [
   "All",
   "Boutique",
   "Groceries",
-  "jkbkb "
+  "Gadgets",
+  "Games",
+  "Books"
 ];
-List<Widget> _widgetList = [
-  
-
-  ];
+List<Widget> _widgetList = [];
   
   int _currrentIndex = 0;
+var address="";
+var state="";
+var society_name="";
 
 class _CategoriesState extends State<Categories> {
+
+  @override
+  void initState() {
+    print("${widget.number} phone no");
+    super.initState();
+    get_data();
+  }
+
+  final _store = Firestore.instance.collection("users");
+
+  get_data() async {
+    var _data = await _store.document(widget.number).snapshots();
+
+    await for (var datastream in _data) {
+      setState(() {
+        address = datastream["address"];
+        state = datastream["state"];
+        society_name = datastream["societyname"];
+      });
+      print(address);
+      print(state);
+      print(society_name);
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     //final prodProvider = Provider.of<Product>(context);
@@ -71,7 +104,7 @@ class _CategoriesState extends State<Categories> {
                   color: Colors.white,
                   height: 40
                 ),
-                Address("   Apollo DB City", "Indore", " Nipania ", wid),
+                Address(address, state, society_name, wid),
                 new SizedBox(height: 20,),
                 new Text("Top Item Categories",
                   style: TextStyle(

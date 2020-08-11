@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:society/screens/screen16.dart';
 
 class AddProductScreen extends StatefulWidget {
   @override
@@ -33,7 +34,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
               Container(
                 // padding: EdgeInsets.only(top: 6.0),
 
-                height: MediaQuery.of(context).size.height * 0.60,
+                height: MediaQuery.of(context).size.height * 0.50,
 
                 color: Colors.grey[300],
 
@@ -154,7 +155,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
             child: RaisedButton(
               //color: Colors.black,
               color: Color.fromRGBO(1, 44, 50, 0.8),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Screen16()),
+                );
+              },
               child: Text(
                 'ADD TO MY STORE',
                 style: TextStyle(color: Colors.white, fontSize: 18),
