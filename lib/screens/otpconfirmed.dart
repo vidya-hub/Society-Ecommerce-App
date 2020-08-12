@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:society/screens/buyerorseller.dart';
 import 'package:society/screens/screen4.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
-
-  class OtpConfirmedPage extends StatefulWidget {
-     final String phone_no;
-
-  const OtpConfirmedPage({
-    Key key,
-    this.phone_no,
-  });
-  
+class OtpConfirmedPage extends StatefulWidget {
   @override
   _OtpConfirmedPageState createState() => _OtpConfirmedPageState();
 }
@@ -19,14 +12,13 @@ class _OtpConfirmedPageState extends State<OtpConfirmedPage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 2),(){
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Screen4()));
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Screen4()));
     });
   }
 
-
-   @override
-
+  @override
   Widget build(BuildContext context) {
     bool _value = false;
 
@@ -54,18 +46,10 @@ class _OtpConfirmedPageState extends State<OtpConfirmedPage> {
               SizedBox(
                 height: 30.0,
               ),
-              // GestureDetector(
-                            //  child:
-                               Text(
-                  "Confirmed",
-                  style: TextStyle(color: Colors.black, fontSize: 30.0),
-        
-                ),
-                // onTap: (){
-                //    Navigator.push(context,
-                //         MaterialPageRoute(builder: (context) => Screen4()));
-                // },
-              //),
+              Text(
+                "Signed-In",
+                style: TextStyle(color: Colors.black, fontSize: 30.0),
+              ),
             ],
           ),
         ),

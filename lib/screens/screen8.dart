@@ -8,7 +8,14 @@ import 'accountPage.dart';
 import 'cart.dart';
 import 'findSociety.dart';
 
-List<String> categories = ["All", "Boutique", "Groceries", "Gadgets","Games","Books"];
+List<String> categories = [
+  "All",
+  "Boutique",
+  "Groceries",
+  "Gadgets",
+  "Games",
+  "Books"
+];
 List<Widget> _widgetList = [
   Screen8_wid(),
   AddStore(),
@@ -17,6 +24,7 @@ List<Widget> _widgetList = [
 ];
 
 int _currentIndex = 0;
+bool _search = true;
 
 //import 'package:society/screens/cart.dart';
 class Screen8 extends StatefulWidget {
@@ -80,7 +88,12 @@ class _Screen8State extends State<Screen8> {
   }
 }
 
-class Screen8_wid extends StatelessWidget {
+class Screen8_wid extends StatefulWidget {
+  @override
+  _Screen8_widState createState() => _Screen8_widState();
+}
+
+class _Screen8_widState extends State<Screen8_wid> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -90,8 +103,85 @@ class Screen8_wid extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(color: Colors.white, height: 40),
-              Address("   Apollo DB City", "Indore", "Nipania ",
-                  MediaQuery.of(context).size.width),
+              Container(
+                height: 75,
+                width: MediaQuery.of(context).size.width,
+                color: Colors.white,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Text(""),
+                    _search
+                        ? Container(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                new SizedBox(
+                                  height: 17,
+                                ),
+                                Row(children: [
+                                  Text(
+                                    "   Apollo DB City",
+                                    style: new TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      //change address
+                                    },
+                                    child: new Text(
+                                      " (change)",
+                                      style: new TextStyle(
+                                        color: Colors.lightBlueAccent,
+                                        fontSize: 18,
+                                        //fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ]),
+                                Text(
+                                  "    " + "Indore" + "Nipania ",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                  ),
+                                  textAlign: TextAlign.start,
+                                )
+                              ],
+                            ),
+                          )
+                        : Container(
+                            margin: EdgeInsets.fromLTRB(40, 0, 0, 0),
+                            width: 200,
+                            child: TextFormField(
+                              decoration:
+                                  InputDecoration(hintText: "Search..."),
+                            ),
+                          ),
+                    // ....
+                    RawMaterialButton(
+                      onPressed: () {
+                        setState(() {
+                          if (_search) {
+                            _search = false;
+                          } else {
+                            _search = true;
+                          }
+                        });
+                      },
+                      fillColor: Colors.grey[300],
+                      child: Icon(
+                        Icons.search,
+                        size: 23,
+                      ),
+                      padding: EdgeInsets.all(8.0),
+                      shape: CircleBorder(),
+                    )
+                  ],
+                ),
+              ),
               SizedBox(
                 height: 20,
               ),
@@ -147,73 +237,6 @@ class Screen8_wid extends StatelessWidget {
   }
 }
 
-Widget Address(String socname, String state, String city, double width) {
-  return Container(
-    height: 75,
-    width: width,
-    color: Colors.white,
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            new SizedBox(
-              height: 17,
-            ),
-            // Padding(
-            //   padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-            // ),
-            Row(children: [
-              Text(
-                socname,
-                style: new TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  //change address
-                },
-                child: new Text(
-                  " (change)",
-                  style: new TextStyle(
-                    color: Colors.lightBlueAccent,
-                    fontSize: 18,
-                    //fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ]),
-            Text(
-              "    " + city + state,
-              style: TextStyle(
-                color: Colors.grey,
-              ),
-              textAlign: TextAlign.start,
-            )
-          ],
-        ),
-        RawMaterialButton(
-    //       onPressed: () {
-    //         Navigator.push(context,
-    // MaterialPageRoute(builder: (context) => FindSociety()));
-    //       },
-          fillColor: Colors.grey[300],
-          child: Icon(
-            Icons.search,
-            size: 23,
-          ),
-          padding: EdgeInsets.all(8.0),
-          shape: CircleBorder(),
-        )
-      ],
-    ),
-  );
-}
-
 Container card(double width, BuildContext context) {
   return Container(
       height: 300,
@@ -224,7 +247,8 @@ Container card(double width, BuildContext context) {
           Expanded(
             child: GestureDetector(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>Cart() ));
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => Cart()));
               },
               child: new Container(
                 height: 200,

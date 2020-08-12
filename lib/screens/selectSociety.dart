@@ -1,8 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:nominatim_location_picker/nominatim_location_picker.dart';
+import 'package:nominatim_location_picker/nominatim_location_picker.dart';
+import 'package:nominatim_location_picker/nominatim_location_picker.dart';
 import 'package:society/models/SocietyModel.dart';
+import 'package:society/screens/categories.dart';
 import 'package:society/screens/profilepage.dart';
 import 'package:society/screens/welcome.dart';
 import 'package:society/utils/citystatelist.dart';
@@ -16,17 +23,16 @@ class Item {
 }
 
 class SelectSocietyPage extends StatefulWidget {
-   final String phone_no;
-  final String type;
-  const SelectSocietyPage({Key key, this.phone_no, this.type});
+  final String type, id;
+  const SelectSocietyPage({Key key, this.type, this.id});
 
   @override
   _SelectSocietyPageState createState() => _SelectSocietyPageState();
 }
 
 class _SelectSocietyPageState extends State<SelectSocietyPage> {
-  String _selectedcity;
-  String address;
+  String _selectedcity = "Delhi, India";
+  String address, lat, lon;
   final addressController = TextEditingController(text: '');
   String _selectedstate;
   String _selectsociety;
@@ -34,17 +40,36 @@ class _SelectSocietyPageState extends State<SelectSocietyPage> {
   final societyController = TextEditingController(text: '');
   SocietyModel societyModel;
 
-
   final _auth = FirebaseAuth.instance;
   FirebaseUser log_user;
   String type;
+  Map _pickedLocation;
 
- @override
+  @override
   void initState() {
     // get_user();
     // get_id();
     print("init");
     super.initState();
+  }
+
+  getLocationWithNominatim() async {
+    Map result = await showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return NominatimLocationPicker(
+            awaitingForLocation:
+                "Turn On your Location First and then search above!",
+          );
+        });
+    if (result != null) {
+      setState(() => _pickedLocation = result);
+      lat = result['latlng'].latitude.toString();
+      lon = result['latlng'].longitude.toString();
+      print(result);
+    } else {
+      print("select");
+    }
   }
 
   List<Item> users = <Item>[
@@ -114,43 +139,44 @@ class _SelectSocietyPageState extends State<SelectSocietyPage> {
                   ],
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(5),
-                    border: Border.all(color: Colors.black)),
-                margin: EdgeInsets.symmetric(vertical: 10),
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: DropdownButton(
-                  isExpanded: true,
-                  hint: Text(
-                      'Please choose a City'), // Not necessary for Option 1
-                  value: _selectedcity,
-                  onChanged: (newValue) {
-                    setState(() {
-                      _selectedcity = newValue;
-                    });
-                  },
-                  items: users.map((Item user) {
-                                    return DropdownMenuItem<Item>(
-                                      value: user,
-                                      child: Row(children: <Widget>[
-                                        user.icon,
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                          user.name,
-                                          style: TextStyle(
-                                              color: Colors.blue,
-                                              fontSize: 16,
-                                              fontFamily: "GentiumBasic"),
-                                        ),
-                                      ]),
-                                    );
-                                  }).toList(),
-                ),
+              GestureDetector(
+                onTap: () async {
+                  await getLocationWithNominatim();
+                  var api_key_main = await Firestore.instance
+                      .collection("api_key")
+                      .document("api_key")
+                      .get();
+                  String key = api_key_main.data["key"];
+                  http.Response res = await http.get(
+                      "https://us1.locationiq.com/v1/reverse.php?key=$key&lat=$lat&lon=$lon&format=json");
+                  setState(() {
+                    if (jsonDecode(res.body)["address"]["city"] == null) {
+                      _selectedcity = jsonDecode(res.body)["address"]
+                              ["county"] +
+                          ", " +
+                          jsonDecode(res.body)["address"]["state"] +
+                          ", " +
+                          jsonDecode(res.body)["address"]["country"];
+                    } else {
+                      _selectedcity = jsonDecode(res.body)["address"]["city"] +
+                          ", " +
+                          jsonDecode(res.body)["address"]["state"] +
+                          ", " +
+                          jsonDecode(res.body)["address"]["country"];
+                    }
+                  });
+                },
+                child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(color: Colors.black)),
+                    margin: EdgeInsets.symmetric(vertical: 10),
+                    padding: EdgeInsets.all(20),
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    child: Row(
+                      children: <Widget>[Text(_selectedcity)],
+                    )),
               ),
               Container(
                 margin: EdgeInsets.symmetric(vertical: 10),
@@ -167,68 +193,19 @@ class _SelectSocietyPageState extends State<SelectSocietyPage> {
                   ],
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(5),
-                    border: Border.all(color: Colors.black)),
-                margin: EdgeInsets.symmetric(vertical: 10),
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: DropdownButton(
-                  isExpanded: true,
-                  hint: Text(
-                      'Enter your society'), // Not necessary for Option 1
-                  value: _selectsociety,
-                  onChanged: (newValue) {
-                    setState(() {
-                      _selectsociety = newValue;
-                    });
-                  },
-                  items:  users.map((Item user) {
-                                    return DropdownMenuItem<Item>(
-                                      value: user,
-                                      child: Row(children: <Widget>[
-                                        user.icon,
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                          user.name,
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                             ),
-                                        ),
-                                      ]),
-                                    );
-                                  }).toList(),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
+                child: TextField(
+                  controller: societyController,
+                  autocorrect: true,
+                  decoration: InputDecoration(
+                      labelText: "Society:",
+                      fillColor: Colors.white,
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          borderSide: BorderSide(color: Colors.black))),
                 ),
               ),
-              // Padding(
-              //   padding: EdgeInsets.only(left: 10, right: 10, bottom: 5),
-              //   child: Container(
-              //     margin: EdgeInsets.symmetric(vertical: 5),
-              //     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              //     width: MediaQuery.of(context).size.width * 0.8,
-              //     decoration: BoxDecoration(
-              //         color: Colors.white,
-              //         borderRadius: BorderRadius.circular(5),
-              //         border: Border.all(color: Colors.black)),
-              //     child: TextFormField(
-              //       cursorColor: Colors.black,
-              //       // validator: valiadetName,
-              //       onSaved: (value) {
-              //         society = value;
-              //       },
-              //       keyboardType: TextInputType.text,
-              //       controller: societyController,
-              //       decoration: InputDecoration(
-              //         border: InputBorder.none,
-              //       ),
-              //     ),
-              //   ),
-              // ),
               Container(
                 margin: EdgeInsets.symmetric(vertical: 10),
                 padding: EdgeInsets.symmetric(horizontal: 40, vertical: 5),
@@ -329,12 +306,18 @@ class _SelectSocietyPageState extends State<SelectSocietyPage> {
                   ),
                   // color: Colors.white,
                   color: Color.fromRGBO(1, 44, 50, 0.8),
-                  onPressed: () {
+                  onPressed: () async {
+                    await Firestore.instance
+                        .collection("Users")
+                        .document(widget.id)
+                        .updateData({
+                      "User_city": _selectedcity,
+                      "society_name": societyController.text,
+                      "full_address": addressController.text,
+                      "User_state": _selectedstate,
+                    });
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => ProfilePage(
-                           phone_no: widget.phone_no,
-
-                        )));
+                        MaterialPageRoute(builder: (context) => ProfilePage(id: widget.id,)));
                   },
                 ),
               )

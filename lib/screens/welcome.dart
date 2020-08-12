@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:society/models/SocietyModel.dart';
+import 'package:society/screens/buyerorseller.dart';
 import 'package:society/screens/otp.dart';
 import 'package:society/screens/otpconfirmed.dart';
+import 'package:society/screens/screen4.dart';
 import 'package:society/screens/screen8.dart';
 
 final usersRef = Firestore.instance.collection('users');
@@ -21,23 +24,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   void initState() {
-    getUsers(_phoneController.text);
     super.initState();
-  }
-
-  getUsers(String number) async {
-    final QuerySnapshot snapshot =
-        await usersRef.where("number", isEqualTo: number).getDocuments();
-    snapshot.documents.forEach((DocumentSnapshot doc) {
-      if (doc.exists) {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => Screen8(number:number),
-        //   ),
-        // );
-      }
-    });
   }
 
   @override
@@ -87,120 +74,71 @@ class _WelcomePageState extends State<WelcomePage> {
                     color: Colors.black,
                     fontSize: 15.0,
                     fontFamily: "Times new Roman",
-                    // fontWeight: FontWeight.bold
                   ),
                 ),
               ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 30),
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                width: MediaQuery.of(context).size.width * 0.9,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(5),
-                    border: Border.all(color: Colors.black)),
-                child: TextFormField(
-                  textAlign: TextAlign.center,
-
-                  cursorColor: Colors.black,
-                  // validator: valiadetName,
-                  onSaved: (value) {
-                    _number = value;
+              Padding(
+                padding: EdgeInsets.only(top: 90),
+                child: OutlineButton(
+                  splashColor: Colors.grey,
+                  onPressed: () async {
+                    GoogleSignIn gs = GoogleSignIn(scopes: ['email']);
+                    GoogleSignInAccount google_user = await gs.signIn();
+                    GoogleSignInAuthentication google_auth =
+                        await google_user.authentication;
+                    final AuthCredential credential =
+                        await GoogleAuthProvider.getCredential(
+                            idToken: google_auth.idToken,
+                            accessToken: google_auth.accessToken);
+                    final AuthResult authResult = await FirebaseAuth.instance
+                        .signInWithCredential(credential);
+                    final FirebaseUser user = await authResult.user;
+                    await Firestore.instance
+                        .collection("Users")
+                        .document(google_user.id)
+                        .setData({
+                      "User_email": user.email,
+                      "User_ID": google_user.id
+                    });
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Screen4(
+                                  id: google_user.id,
+                                )));
                   },
-                  // keyboardType: TextInputType.numberWithOptions(
-                  //     signed: true, decimal: true),
-
-                  controller: _phoneController,
-                  decoration: InputDecoration(
-                    hintText: "ENTER YOUR PHONE NUMBER",
-                    hintStyle: TextStyle(),
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 25),
-                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                width: MediaQuery.of(context).size.width * 0.93,
-                height: MediaQuery.of(context).size.height * 0.1,
-                // alignment: Alignment.bottomRight,
-                child: RaisedButton(
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                      side: BorderSide(color: Colors.grey)),
-                  child: Text(
-                    "PROCEED",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: "Times new Roman",
-                        fontSize: 15.0),
+                      borderRadius: BorderRadius.circular(40)),
+                  highlightElevation: 0,
+                  borderSide: BorderSide(color: Colors.black54, width: 2),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Image(
+                            image: AssetImage("assets/google-logo.jpg"),
+                            height: 35.0),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text(
+                            'Sign in with Google',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                  // color: Colors.white,
-                  color: Color.fromRGBO(1, 44, 50, 0.8),
-                  onPressed: () {
-                    verify(_phoneController.text);
-                  },
                 ),
-              )
+              ),
             ],
           ),
         ),
       ),
     );
   }
-
-  Future<void> verify(phone_no) async {
-    getUsers(phone_no);
-    final PhoneVerificationCompleted verified =
-        (AuthCredential authResult) async {
-      print(authResult.providerId);
-      //  await Firestore.instance
-      //     .collection(phone_no)
-      //     .document("demodata")
-      //     .setData({"data": "demodata"});
-      // print("verified");
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => OtpConfirmedPage(phone_no: phone_no),
-        ),
-      );
-    };
-    final PhoneVerificationFailed failed = (AuthException excep) {
-      // Navigator.of(context).pop();
-      print("failed");
-      print("${excep.message}");
-      print("${excep.code}");
-    };
-    final PhoneCodeSent smssent = (String verId, [int forceresend]) async {
-      this.verification_id = verId;
-      print("sms is sent");
-      print(verId);
-      print(verification_id);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Otp(
-            phone_no: _phoneController.text,
-            ver_code: verification_id,
-          ),
-        ),
-      );
-    };
-    final PhoneCodeAutoRetrievalTimeout auto_timeout = (String verId) {
-      this.verification_id = verId;
-      print("timeout");
-      print(verId);
-    };
-
-    FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: phone_no,
-      timeout: const Duration(seconds: 60),
-      verificationCompleted: verified,
-      verificationFailed: failed,
-      codeSent: smssent,
-      codeAutoRetrievalTimeout: auto_timeout,
-    );
-  }
 }
-

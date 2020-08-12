@@ -100,7 +100,7 @@ class _AddStoreState extends State<AddStore> {
                       : Image.file(
                           _image,
 
-                          // width: MediaQuery.of(context).size.width,
+                         // width: MediaQuery.of(context).size.width,
 
                           // height: MediaQuery.of(context).size.height * 0.34,
 
@@ -175,80 +175,80 @@ class _AddStoreState extends State<AddStore> {
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                "Store Category",
-                                style: TextStyle(
-                                    fontSize: 17,
-                                    fontFamily: "Times new Roman"),
-                                textAlign: TextAlign.left,
-                              ),
-                              //
-                              SizedBox(height: 40.0),
-                              StreamBuilder<QuerySnapshot>(
-                                  stream: Firestore.instance
-                                      .collection("category2")
-                                      .snapshots(),
-                                  builder: (context, snapshot) {
-                                    if (!snapshot.hasData)
-                                      const Text("Loading.....");
-                                    else {
-                                      List<DropdownMenuItem> categoryItems = [];
-                                      for (int i = 0;
-                                          i < snapshot.data.documents.length;
-                                          i++) {
-                                        DocumentSnapshot snap =
-                                            snapshot.data.documents[i];
-                                        categoryItems.add(
-                                          DropdownMenuItem(
-                                            child: Text(
-                                              snap.documentID,
-                                              style: TextStyle(),
-                                            ),
-                                            value: "${snap.documentID}",
-                                          ),
-                                        );
-                                      }
-                                      return Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          // Icon(FontAwesomeIcons.coins,
-                                          //     size: 25.0, color: Color(0xff11b719)),
-                                          SizedBox(width: 50.0),
-                                          DropdownButton(
-                                            items: categoryItems,
-                                            onChanged: (categoryValue) {
-                                              final snackBar = SnackBar(
-                                                content: Text(
-                                                  'Selected store Category is $categoryValue',
-                                                  style: TextStyle(
-                                                      color: Color(0xff11b719)),
-                                                ),
-                                              );
-                                              Scaffold.of(context)
-                                                  .showSnackBar(snackBar);
-                                              setState(() {
-                                                selectedCategory =
-                                                    categoryValue;
-                                              });
-                                            },
-                                            value: selectedCategory,
-                                            isExpanded: false,
-                                            hint: new Text(
-                                              "Select category",
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              "Store Category",
+                              style: TextStyle(
+                                  fontSize: 17, fontFamily: "Times new Roman"),
+                              textAlign: TextAlign.left,
+                            ),
+                            //
+                            SizedBox(height: 20.0),
+                            StreamBuilder<QuerySnapshot>(
+                              stream: Firestore.instance
+                                  .collection("category2")
+                                  .snapshots(),
+                              // ignore: missing_return
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData)
+                                  const Text("Loading.....");
+                                else {
+                                  List<DropdownMenuItem> categoryItems = [];
+                                  for (int i = 0;
+                                      i < snapshot.data.documents.length;
+                                      i++) {
+                                    DocumentSnapshot snap =
+                                        snapshot.data.documents[i];
+                                    categoryItems.add(
+                                      DropdownMenuItem(
+                                        child: Text(
+                                          snap.documentID,
+                                          style: TextStyle(),
+                                        ),
+                                        value: "${snap.documentID}",
+                                      ),
+                                    );
+                                  }
+                                  return Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      // Icon(FontAwesomeIcons.coins,
+                                      //     size: 25.0, color: Color(0xff11b719)),
+                                      SizedBox(width: 20.0),
+                                      DropdownButton(
+                                        items: categoryItems,
+                                        onChanged: (categoryValue) {
+                                          final snackBar = SnackBar(
+                                            content: Text(
+                                              'Selected store Category is $categoryValue',
                                               style: TextStyle(
-                                                  color: Colors.grey[800],
-                                                  fontWeight: FontWeight.w500),
+                                                  color: Color(0xff11b719)),
                                             ),
-                                          ),
-                                        ],
-                                      );
-                                    }
-                                  }),
-                              //
-                            ]),
+                                          );
+                                          Scaffold.of(context)
+                                              .showSnackBar(snackBar);
+                                          setState(() {
+                                            selectedCategory = categoryValue;
+                                          });
+                                        },
+                                        value: selectedCategory,
+                                        isExpanded: false,
+                                        hint: new Text(
+                                          "Select category",
+                                          style: TextStyle(
+                                              color: Colors.grey[800],
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }
+                              },
+                            ),
+                            //
+                          ],
+                        ),
                       ),
                     ),
                   ),

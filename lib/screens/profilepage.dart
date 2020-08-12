@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,11 +10,8 @@ import 'package:society/screens/welcome.dart';
 final usersRef = Firestore.instance.collection('users');
 
 class ProfilePage extends StatefulWidget {
-  final String phone_no;
-  const ProfilePage({
-    Key key,
-    this.phone_no,
-  });
+  final String id;
+  const ProfilePage({Key key, this.id});
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -23,31 +19,12 @@ class ProfilePage extends StatefulWidget {
 
 String name;
 final _nameController = TextEditingController(text: '');
+final _numberController = TextEditingController(text: '');
 String _selectedGender; // Option 2
 List<String> genderlist = ["Male", "Female", "Others"];
 
 File _image;
-  final picker = ImagePicker();
-  Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-
-    // setState(() {
-    //   _image = File(pickedFile.path);
-    // });
-  }
-
-  //  @override
-  // void initState() {
-  //   //super.initState();
-  //   // updateDataInFirestore();
-  // }
-
-  // updateDataInFirestore() async {
-  //   await usersRef
-  //       .document(widget.phone_no)
-  //       .updateData({"gender": _selectedGender, "name": _nameController.text});
-  // }
-
+final picker = ImagePicker();
 
 class _ProfilePageState extends State<ProfilePage> {
   @override
@@ -58,50 +35,50 @@ class _ProfilePageState extends State<ProfilePage> {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              Padding(padding: EdgeInsets.symmetric(vertical:20)),
+              Padding(padding: EdgeInsets.symmetric(vertical: 20)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                   Align(
-                          alignment: Alignment.center,
-                          child: CircleAvatar(
-                            radius: 70.0,
-                            backgroundColor: Colors.black12,
-                            child: _image != null
-                                ? ClipOval(
-                                    child: SizedBox(
-                                      height: 130,
-                                      width: 130,
-                                      child: Image.file(
-                                        _image,
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
-                                  )
-                                : ClipOval(
-                                    child: SizedBox(
-                                    width: 130,
-                                    height: 130,
-                                    child: Image(
-                                      image: AssetImage(
-                                        'assets/dummyprofile.jpg',
-                                      ),
-                                      fit: BoxFit.fill,
-                                    ),
-                                  )),
-                          )),
-                      Padding(
-                          padding: EdgeInsets.only(top: 60.0),
-                          child: IconButton(
-                            icon: Icon(
-                              FontAwesomeIcons.camera,
-                              size: 30.0,
-                              color: Colors.black,
-                            ),
-                            onPressed: () {
-                              getImage();
-                            },
-                          )),
+                  Align(
+                      alignment: Alignment.center,
+                      child: CircleAvatar(
+                        radius: 70.0,
+                        backgroundColor: Colors.black12,
+                        child: _image != null
+                            ? ClipOval(
+                                child: SizedBox(
+                                  height: 130,
+                                  width: 130,
+                                  child: Image.file(
+                                    _image,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                              )
+                            : ClipOval(
+                                child: SizedBox(
+                                width: 130,
+                                height: 130,
+                                child: Image(
+                                  image: AssetImage(
+                                    'assets/dummyprofile.jpg',
+                                  ),
+                                  fit: BoxFit.fill,
+                                ),
+                              )),
+                      )),
+                  Padding(
+                      padding: EdgeInsets.only(top: 60.0),
+                      child: IconButton(
+                        icon: Icon(
+                          FontAwesomeIcons.camera,
+                          size: 30.0,
+                          color: Colors.black,
+                        ),
+                        onPressed: () {
+                          getImage();
+                        },
+                      )),
                 ],
               ),
               Row(
@@ -203,6 +180,47 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               Container(
+                margin: EdgeInsets.symmetric(vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 5),
+                // width: MediaQuery.of(context).size.width * 0.8,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      "Mobile Number",
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 15.0,
+                          fontFamily: "Times new Roman"),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                child: Container(
+                  margin: EdgeInsets.symmetric(vertical: 5),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(color: Colors.black)),
+                  child: TextFormField(
+                    cursorColor: Colors.black,
+                    // validator: valiadetName,
+                    onSaved: (value) {
+                      name = value;
+                    },
+                    keyboardType: TextInputType.text,
+                    controller: _numberController,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+              ),
+              Container(
                 margin: EdgeInsets.symmetric(vertical: 50),
                 padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                 width: MediaQuery.of(context).size.width * 0.84,
@@ -221,9 +239,15 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   // color: Colors.white,
                   color: Color.fromRGBO(1, 44, 50, 0.8),
-                  onPressed: () {
-                      // updateDataInFirestore();
-
+                  onPressed: () async {
+                    await Firestore.instance
+                        .collection("Users")
+                        .document(widget.id)
+                        .updateData({
+                      "Name": _nameController.text,
+                      "Mobile_Number": _numberController.text,
+                      "Gender": _selectedGender,
+                    });
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => Screen8()));
                   },
@@ -234,5 +258,13 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
     );
+  }
+
+  Future getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      _image = File(pickedFile.path);
+    });
   }
 }
