@@ -131,6 +131,11 @@ class _Screen8_widState extends State<Screen8_wid> {
                                   GestureDetector(
                                     onTap: () {
                                       //change address
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SelectSocietyPage()));
                                     },
                                     child: new Text(
                                       " (change)",
