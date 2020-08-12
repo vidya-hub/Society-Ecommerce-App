@@ -15,6 +15,7 @@ import 'package:society/screens/screen20.dart';
 import 'package:society/screens/screen8.dart';
 import 'package:society/screens/screen9.dart';
 import 'package:society/screens/welcome.dart';
+import 'package:society/screens/condition.dart';
 import 'package:provider/provider.dart';
 import './models/products.dart';
 
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.amber,
           fontFamily: "Gilroy",
         ),
-        home: WelcomePage(),
+        home: Condition(),
         routes: {
           FindSociety.routeName : (context) => FindSociety(),
           DrawerScreen.routeName :(context) => DrawerScreen(),
