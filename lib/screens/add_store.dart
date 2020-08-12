@@ -6,11 +6,6 @@ import 'package:society/screens/add_product_screen.dart';
 import 'package:society/screens/screen13.dart';
 import 'package:society/screens/screen16.dart';
 
-class Item {
-  const Item(this.name);
-  final String name;
-}
-
 class AddStore extends StatefulWidget {
   @override
   _AddStoreState createState() => _AddStoreState();
@@ -21,25 +16,6 @@ class _AddStoreState extends State<AddStore> {
   final _nameController = TextEditingController(text: '');
   File _image;
   final picker = ImagePicker();
-  Item selectedUser;
-
-  List<Item> users = <Item>[
-    const Item(
-      'Boutique',
-    ),
-    const Item(
-      'Groceries',
-    ),
-    const Item(
-      'Gadgets',
-    ),
-    const Item(
-      'Games',
-    ),
-    const Item(
-      'Books',
-    ),
-  ];
 
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
@@ -49,9 +25,9 @@ class _AddStoreState extends State<AddStore> {
     });
   }
 
+  var selectedCategory;
   @override
   Widget build(BuildContext context) {
-    var selectedCategory, selectedType;
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       body: Container(
@@ -100,7 +76,7 @@ class _AddStoreState extends State<AddStore> {
                       : Image.file(
                           _image,
 
-                         // width: MediaQuery.of(context).size.width,
+                          // width: MediaQuery.of(context).size.width,
 
                           // height: MediaQuery.of(context).size.height * 0.34,
 
@@ -192,7 +168,7 @@ class _AddStoreState extends State<AddStore> {
                               // ignore: missing_return
                               builder: (context, snapshot) {
                                 if (!snapshot.hasData)
-                                  const Text("Loading.....");
+                                  return const Text("Loading.....");
                                 else {
                                   List<DropdownMenuItem> categoryItems = [];
                                   for (int i = 0;
@@ -226,16 +202,18 @@ class _AddStoreState extends State<AddStore> {
                                                   color: Color(0xff11b719)),
                                             ),
                                           );
-                                          Scaffold.of(context)
-                                              .showSnackBar(snackBar);
+
                                           setState(() {
                                             selectedCategory = categoryValue;
                                           });
+                                          Scaffold.of(context)
+                                              .showSnackBar(snackBar);
                                         },
                                         value: selectedCategory,
                                         isExpanded: false,
                                         hint: new Text(
                                           "Select category",
+                                          textAlign: TextAlign.center,
                                           style: TextStyle(
                                               color: Colors.grey[800],
                                               fontWeight: FontWeight.w500),
