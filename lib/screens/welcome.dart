@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:intl/intl.dart';
 import 'package:society/models/SocietyModel.dart';
 import 'package:society/screens/buyerorseller.dart';
 import 'package:society/screens/otp.dart';
@@ -15,7 +16,9 @@ class WelcomePage extends StatefulWidget {
   @override
   _WelcomePageState createState() => _WelcomePageState();
 }
-
+var updatedDt;
+var addDt = DateTime.now();
+var newFormat = DateFormat("dd-MMMM-y");
 class _WelcomePageState extends State<WelcomePage> {
   static const routeName = '/WelcomePage';
   String _number, verification_id;
@@ -93,19 +96,36 @@ class _WelcomePageState extends State<WelcomePage> {
                     final AuthResult authResult = await FirebaseAuth.instance
                         .signInWithCredential(credential);
                     final FirebaseUser user = await authResult.user;
-                    await Firestore.instance
+                    final sp = await Firestore.instance
                         .collection("Users")
                         .document(google_user.id)
-                        .setData({
-                      "User_email": user.email,
-                      "User_ID": google_user.id
-                    });
-                    Navigator.push(
+                        .get();
+                    if (sp.exists) {
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => Screen4(
-                                  id: google_user.id,
-                                )));
+                          builder: (context) => Screen8(),
+                        ),
+                      );
+                    } else {
+                      await Firestore.instance
+                          .collection("Users")
+                          .document(google_user.id)
+                          .setData({
+                        "date":newFormat.format(addDt),
+                        "User_email": user.email,
+                        "User_ID": google_user.id,
+                        "Society_Id": user.uid,
+                      });
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Screen4(
+                            id: google_user.id,
+                          ),
+                        ),
+                      );
+                    }
                   },
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(40)),
@@ -123,7 +143,7 @@ class _WelcomePageState extends State<WelcomePage> {
                         Padding(
                           padding: const EdgeInsets.only(left: 10),
                           child: Text(
-                            'Sign in with Google',
+                            'Start with Google',
                             style: TextStyle(
                               fontSize: 20,
                               color: Colors.black87,

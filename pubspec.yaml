@@ -39,6 +39,10 @@ dependencies:
   font_awesome_flutter:
   google_sign_in: ^4.5.1
   nominatim_location_picker:
+  path_provider: 
+  firebase_storage: 
+  uuid: 
+  image:
    
 
 dev_dependencies:

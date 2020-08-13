@@ -1,9 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:society/screens/add_product_screen.dart';
 import 'package:society/screens/screen13.dart';
+import 'package:image/image.dart' as Img;
 import 'package:society/screens/screen16.dart';
 
 class AddStore extends StatefulWidget {
@@ -11,9 +16,34 @@ class AddStore extends StatefulWidget {
   _AddStoreState createState() => _AddStoreState();
 }
 
+final _auth = FirebaseAuth.instance;
+FirebaseUser log_user;
+
 class _AddStoreState extends State<AddStore> {
+  void get_user() async {
+    final user = await _auth.currentUser();
+    try {
+      if (user != null) {
+        setState(() {
+          log_user = user;
+        });
+        print(log_user.email);
+        print(log_user.uid);
+      } else {
+        print("null");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  var updatedDt;
+  var addDt = DateTime.now();
+  var newFormat = DateFormat("dd-MMMM-y");
+
   String _name;
   final _nameController = TextEditingController(text: '');
+  final _desccontroller = TextEditingController();
   File _image;
   final picker = ImagePicker();
 
@@ -25,8 +55,79 @@ class _AddStoreState extends State<AddStore> {
     });
   }
 
+  var selected_value;
+  final StorageReference storageRef = FirebaseStorage.instance.ref();
+  final storeRef = Firestore.instance.collection('Store');
+  compressImage() async {
+    final tempDir = await getTemporaryDirectory();
+    final path = tempDir.path;
+
+    Img.Image imageFile = Img.decodeImage(_image.readAsBytesSync());
+
+    final compressedImageFile = File('$path/img_${log_user.uid}')
+      ..writeAsBytesSync(Img.encodeJpg(imageFile, quality: 85));
+
+    setState(() {
+      _image = compressedImageFile;
+    });
+  }
+
+  Future<String> uploadImage(imageFile) async {
+    StorageUploadTask uploadTask =
+        storageRef.child('store').child('post_1.jpg').putFile(imageFile);
+
+    StorageTaskSnapshot storageSnap = await uploadTask.onComplete;
+
+    String downloadUrl = await storageSnap.ref.getDownloadURL();
+
+    return downloadUrl;
+  }
+
+  createPostInFirestore(
+      {String mediaUrl,
+      String title,
+      String description,
+      String mobileNo}) async {
+    await Firestore.instance
+        .collection("AddStore")
+        .document(log_user.uid)
+        .setData(
+      {
+        'createdAt': newFormat.format(addDt),
+        'ownerUserId': log_user.uid,
+        'storeName': _nameController.text,
+        's_photoUrl': mediaUrl,
+        'storeDescription': _desccontroller.text,
+        "selected-category": selected_value,
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    setState(() {
+      get_user();
+    });
+    super.initState();
+  }
+
   var selectedCategory;
   @override
+  storeData() async {
+    await compressImage();
+
+    String mediaUrl = await uploadImage(_image);
+
+    createPostInFirestore(
+      mediaUrl: mediaUrl,
+      title:_nameController.text,
+      description: _desccontroller.text,
+    );
+
+    _nameController.clear();
+    _desccontroller.clear();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
@@ -120,9 +221,8 @@ class _AddStoreState extends State<AddStore> {
                   _name = value;
                 },
                 keyboardType: TextInputType.text,
-                controller: _nameController,
+                controller: _desccontroller,
                 decoration: InputDecoration(
-                    // icon: Icon(Icons.people, color: Colors.black),
                     labelText: "Add store decription",
                     border: InputBorder.none,
                     labelStyle: TextStyle(
@@ -195,6 +295,9 @@ class _AddStoreState extends State<AddStore> {
                                       DropdownButton(
                                         items: categoryItems,
                                         onChanged: (categoryValue) {
+                                          setState(() {
+                                            selected_value = categoryValue;
+                                          });
                                           final snackBar = SnackBar(
                                             content: Text(
                                               'Selected store Category is $categoryValue',
@@ -240,6 +343,7 @@ class _AddStoreState extends State<AddStore> {
                 child: RaisedButton(
                   color: Color.fromRGBO(1, 44, 50, 0.8),
                   onPressed: () {
+                    storeData();
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => Screen13()),

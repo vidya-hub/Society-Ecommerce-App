@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:society/screens/add_store.dart';
 import 'package:society/screens/orderDetails.dart';
 import 'package:society/screens/profilepage.dart';
+import 'package:society/screens/selectSociety.dart';
 import '../screens/screen13.dart';
 import 'accountPage.dart';
 import 'cart.dart';
@@ -269,6 +270,7 @@ Container card(double width, BuildContext context) {
           ),
           new ListTile(
             title: new Text("Shweta Groceries",
+            // store title
                 style: new TextStyle(color: Colors.black, fontSize: 18)),
             subtitle: new Text("\nAll the "),
             contentPadding: EdgeInsets.all(5.0),

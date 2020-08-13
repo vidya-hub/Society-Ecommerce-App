@@ -15,22 +15,20 @@ import 'package:society/screens/screen20.dart';
 import 'package:society/screens/screen8.dart';
 import 'package:society/screens/screen9.dart';
 import 'package:society/screens/welcome.dart';
-import 'package:society/screens/condition.dart';
+// import 'package:society/screens/condition.dart';
 import 'package:provider/provider.dart';
 import './models/products.dart';
 
 void main() {
   runApp(MyApp());
-  }
+}
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  // vidya
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
-          value: Products(),
-          child: MaterialApp(
+      value: Products(),
+      child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Society',
         theme: ThemeData(
@@ -38,15 +36,14 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.amber,
           fontFamily: "Gilroy",
         ),
-        home: Condition(),
+        home: WelcomePage(),
         routes: {
-          FindSociety.routeName : (context) => FindSociety(),
-          DrawerScreen.routeName :(context) => DrawerScreen(),
-          AddSociety.routeName :(context) => AddSociety(),
-         // AddProductScreen.routeName : (Context)=> AddProductScreen(),
+          FindSociety.routeName: (context) => FindSociety(),
+          DrawerScreen.routeName: (context) => DrawerScreen(),
+          AddSociety.routeName: (context) => AddSociety(),
+          // AddProductScreen.routeName : (Context)=> AddProductScreen(),
         },
       ),
     );
   }
 }
-

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:society/screens/selectSociety.dart';
-
+import '../main.dart';
+import './selectSociety.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'profilepage.dart';
+import './welcome.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AccountPage extends StatefulWidget {
   var number;
@@ -84,10 +87,10 @@ class _AccountPageState extends State<AccountPage> {
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                   Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ProfilePage()),
-            );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProfilePage()),
+                  );
                 },
                 child: Row(
                   children: <Widget>[
@@ -124,12 +127,13 @@ class _AccountPageState extends State<AccountPage> {
               ),
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap:(){Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => SelectSocietyPage(),
-    ),
-                );
-              
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SelectSocietyPage(),
+                    ),
+                  );
                 },
                 child: Row(
                   children: <Widget>[
@@ -167,7 +171,15 @@ class _AccountPageState extends State<AccountPage> {
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  Navigator.pop(context);
+                  final _auth = FirebaseAuth.instance;
+                  _auth.signOut();
+                  print(true);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WelcomePage(),
+                    ),
+                  );
                 },
                 child: Row(
                   children: <Widget>[
@@ -192,11 +204,9 @@ class _AccountPageState extends State<AccountPage> {
                     Spacer(),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(10, 30, 0, 0),
-                      child: Container(
-                        child: Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.black,
-                        ),
+                      child: Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.black,
                       ),
                     )
                   ],
