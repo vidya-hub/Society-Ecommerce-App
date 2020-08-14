@@ -62,9 +62,6 @@ class _AddStoreState extends State<AddStore> {
 
   void get_user() async {
     final user = await _auth.currentUser();
-    // GoogleSignIn gs = GoogleSignIn(scopes: ['email']);
-    // final GoogleSignInAccount googleUser = await gs.signIn();
-    // print(googleUser.id);
     try {
       if (user != null) {
         setState(() {

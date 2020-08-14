@@ -34,7 +34,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   void initState() {
-    print("inoint");
+    // print("inoint");
     super.initState();
     googleSignIn.isSignedIn().then(
           (value) => {

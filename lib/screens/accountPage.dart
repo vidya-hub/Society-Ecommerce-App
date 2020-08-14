@@ -201,7 +201,6 @@ class _AccountPageState extends State<AccountPage> {
                     print(
                       gs.isSignedIn(),
                     );
-                    // print(googleUser.id);
                     print(true);
                     setState(() {
                       _sending = false;
