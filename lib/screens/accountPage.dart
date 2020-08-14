@@ -190,14 +190,17 @@ class _AccountPageState extends State<AccountPage> {
                 ),
                 GestureDetector(
                   behavior: HitTestBehavior.opaque,
-                  onTap: () async {
+                  onTap: () {
                     setState(() {
                       _sending = true;
                     });
                     // final _auth = FirebaseAuth.instance;
                     // _auth.signOut();
-                    GoogleSignIn gs = GoogleSignIn(scopes: ['email']);
-                    final GoogleSignInAccount googleUser = await gs.signOut();
+                    GoogleSignIn gs = GoogleSignIn();
+                    gs.signOut();
+                    print(
+                      gs.isSignedIn(),
+                    );
                     // print(googleUser.id);
                     print(true);
                     setState(() {

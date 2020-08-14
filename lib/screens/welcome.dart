@@ -36,19 +36,34 @@ class _WelcomePageState extends State<WelcomePage> {
   void initState() {
     print("inoint");
     super.initState();
-    googleSignIn.signInSilently().then(
-      (value) {
-        setState(() {
-          currentgoogleuserid = value.id;
-        });
-        print(currentgoogleuserid);
-        handleSignIn(value);
-      },
-    ).catchError(
-      (error) {
-        print(error);
-      },
-    );
+    googleSignIn.isSignedIn().then(
+          (value) => {
+            if (value)
+              {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Screen8(),
+                  ),
+                )
+              }
+            else
+              {print("else part")}
+          },
+        );
+    // googleSignIn.signInSilently().then(
+    //   (value) {
+    //     setState(() {
+    //       currentgoogleuserid = value.id;
+    //     });
+    //     print(currentgoogleuserid);
+        // handleSignIn(value);
+    //   },
+    // ).catchError(
+    //   (error) {
+    //     print(error);
+    //   },
+    // );
   }
 
   @override
@@ -196,17 +211,17 @@ class _WelcomePageState extends State<WelcomePage> {
     );
   }
 
-  handleSignIn(GoogleSignInAccount account) async {
-    if (account != null) {
-      print("he is there");
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Screen8(),
-        ),
-      );
-    } else {
-      print("he is not there");
-    }
-  }
+  // handleSignIn(GoogleSignInAccount account) async {
+  //   if (account != null) {
+  //     print("he is there");
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => Screen8(),
+  //       ),
+  //     );
+  //   } else {
+  //     print("he is not there");
+  //   }
+  // }
 }
