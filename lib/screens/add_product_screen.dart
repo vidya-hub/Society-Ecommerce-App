@@ -2,12 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as Img;
 import 'package:intl/intl.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:society/screens/screen16.dart';
+import 'package:society/screens/welcome.dart';
 import 'package:uuid/uuid.dart';
 
 class AddProductScreen extends StatefulWidget {
@@ -29,22 +32,23 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final _auth = FirebaseAuth.instance;
   FirebaseUser log_user;
 
-  void get_user() async {
-    final user = await _auth.currentUser();
-    try {
-      if (user != null) {
-        setState(() {
-          log_user = user;
-        });
-        print(log_user.email);
-        print(log_user.uid);
-      } else {
-        print("null");
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
+  // void get_user() async {
+  //   final user = await _auth.currentUser();
+
+  //   try {
+  //     if (user != null) {
+  //       setState(() {
+  //         log_user = user;
+  //       });
+  //       print(log_user.email);
+  //       print(log_user.uid);
+  //     } else {
+  //       print("null");
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
@@ -90,7 +94,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       String mobileNo}) {
     DocumentReference documentReference = Firestore.instance
         .collection('Product')
-        .document(log_user.uid)
+        .document(currentgoogleuserid)
         .collection('products')
         .document();
     var addDt = DateTime.now();
@@ -114,12 +118,25 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   @override
   void initState() {
-    setState(() {
-      get_user();
-    });
+    googleSignIn.signInSilently().then(
+      (value) {
+        setState(() {
+          currentgoogleuserid = value.id;
+        });
+        print("this page $currentgoogleuserid");
+      },
+    ).catchError(
+      (error) {
+        print(error);
+      },
+    );
+    // setState(() {
+    //   get_user();
+    // });
     super.initState();
   }
 
+  bool _storing = false;
   @override
   Widget build(BuildContext context) {
     productSave() async {
@@ -142,140 +159,149 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      body: Container(
-        padding: EdgeInsets.all(6),
-        child: Column(children: <Widget>[
-          Stack(
-            children: [
-              Container(
-                // padding: EdgeInsets.only(top: 6.0),
+      body: ModalProgressHUD(
+        inAsyncCall: _storing,
+        child: Container(
+          padding: EdgeInsets.all(6),
+          child: Column(children: <Widget>[
+            Stack(
+              children: [
+                Container(
+                  // padding: EdgeInsets.only(top: 6.0),
 
-                height: MediaQuery.of(context).size.height * 0.50,
+                  height: MediaQuery.of(context).size.height * 0.50,
 
-                color: Colors.grey[300],
+                  color: Colors.grey[300],
 
-                width: double.infinity,
+                  width: double.infinity,
 
-                child: _image == null
-                    ? Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          IconButton(
-                            icon: Icon(
-                              Icons.add_a_photo,
-                              size: 40.0,
+                  child: _image == null
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            IconButton(
+                              icon: Icon(
+                                Icons.add_a_photo,
+                                size: 40.0,
+                              ),
+                              onPressed: () {
+                                getImage();
+                              },
                             ),
-                            onPressed: () {
-                              getImage();
-                            },
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              getImage();
-                            },
-                            child: Text(
-                              'Add a Store image',
-                              style: TextStyle(
-                                fontSize: 20,
+                            GestureDetector(
+                              onTap: () {
+                                getImage();
+                              },
+                              child: Text(
+                                'Add a Store image',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      )
-                    : Image.file(
-                        _image,
-                        fit: BoxFit.cover,
+                          ],
+                        )
+                      : Image.file(
+                          _image,
+                          fit: BoxFit.cover,
+                        ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0.0, 20.0, 327, 21.0),
+                  child: IconButton(
+                      icon: Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.black,
                       ),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(0.0, 20.0, 327, 21.0),
-                child: IconButton(
-                    icon: Icon(
-                      Icons.arrow_back_ios,
-                      color: Colors.black,
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    }),
-              )
-            ],
-          ),
-          Form(
-              child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              TextFormField(
-                cursorColor: Colors.black,
-                validator: validatetName,
-                onSaved: (value) {
-                  _name = value;
-                },
-                keyboardType: TextInputType.text,
-                controller: _nameController,
-                decoration: InputDecoration(
-                    // icon: Icon(Icons.people, color: Colors.black),
-                    labelText: "Write Product Name",
-                    border: InputBorder.none,
-                    labelStyle:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              ),
-              Text(
-                'Shweta Jewls',
-                style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold),
-              ),
-              //Text('Write description about the product', style: TextStyle(color: Colors, fontSize:18, fontWeight: FontWeight.bold),),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      }),
+                )
+              ],
+            ),
+            Form(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                TextFormField(
+                  cursorColor: Colors.black,
+                  validator: validatetName,
+                  onSaved: (value) {
+                    _name = value;
+                  },
+                  keyboardType: TextInputType.text,
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                      // icon: Icon(Icons.people, color: Colors.black),
+                      labelText: "Write Product Name",
+                      border: InputBorder.none,
+                      labelStyle:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                ),
+                Text(
+                  'Shweta Jewls',
+                  style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
+                ),
+                //Text('Write description about the product', style: TextStyle(color: Colors, fontSize:18, fontWeight: FontWeight.bold),),
 
-              TextFormField(
-                cursorColor: Colors.black,
-                validator: validatetName,
-                onSaved: (value) {
-                  _name = value;
+                TextFormField(
+                  cursorColor: Colors.black,
+                  validator: validatetName,
+                  onSaved: (value) {
+                    _name = value;
+                  },
+                  keyboardType: TextInputType.text,
+                  controller: _descController,
+                  decoration: InputDecoration(
+                      // icon: Icon(Icons.people, color: Colors.black),
+                      labelText: "Write description about the product",
+                      border: InputBorder.none,
+                      labelStyle:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                ),
+                TextFormField(
+                  cursorColor: Colors.black,
+                  validator: validatetName,
+                  onSaved: (value) {
+                    _name = value;
+                  },
+                  keyboardType: TextInputType.text,
+                  controller: _priceController,
+                  decoration: InputDecoration(
+                      // icon: Icon(Icons.people, color: Colors.black),
+                      labelText: "Price",
+                      border: InputBorder.none,
+                      labelStyle:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                ),
+              ],
+            )),
+            Spacer(),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              child: RaisedButton(
+                //color: Colors.black,
+                color: Color.fromRGBO(1, 44, 50, 0.8),
+                onPressed: () {
+                  setState(() {
+                    _storing = true;
+                  });
+                  productSave();
+                  setState(() {
+                    _storing = true;
+                  });
                 },
-                keyboardType: TextInputType.text,
-                controller: _descController,
-                decoration: InputDecoration(
-                    // icon: Icon(Icons.people, color: Colors.black),
-                    labelText: "Write description about the product",
-                    border: InputBorder.none,
-                    labelStyle:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              ),
-              TextFormField(
-                cursorColor: Colors.black,
-                validator: validatetName,
-                onSaved: (value) {
-                  _name = value;
-                },
-                keyboardType: TextInputType.text,
-                controller: _priceController,
-                decoration: InputDecoration(
-                    // icon: Icon(Icons.people, color: Colors.black),
-                    labelText: "Price",
-                    border: InputBorder.none,
-                    labelStyle:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              ),
-            ],
-          )),
-          Spacer(),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            child: RaisedButton(
-              //color: Colors.black,
-              color: Color.fromRGBO(1, 44, 50, 0.8),
-              onPressed: () {
-                productSave();
-              },
-              child: Text(
-                'ADD TO MY STORE',
-                style: TextStyle(color: Colors.white, fontSize: 18),
+                child: Text(
+                  'ADD TO MY STORE',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
               ),
             ),
-          ),
-        ]),
+          ]),
+        ),
       ),
     );
   }

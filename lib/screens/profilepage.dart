@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -17,16 +18,39 @@ class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
+final _auth = FirebaseAuth.instance;
+FirebaseUser log_user;
+
 String name;
 final _nameController = TextEditingController(text: '');
 final _numberController = TextEditingController(text: '');
-String _selectedGender; // Option 2
+String _selectedGender;
 List<String> genderlist = ["Male", "Female", "Others"];
 
 File _image;
 final picker = ImagePicker();
 
 class _ProfilePageState extends State<ProfilePage> {
+  void get_user() async {
+    final user = await _auth.currentUser();
+    // GoogleSignIn gs = GoogleSignIn(scopes: ['email']);
+    // final GoogleSignInAccount googleUser = await gs.signIn();
+    // print(googleUser.id);
+    try {
+      if (user != null) {
+        setState(() {
+          log_user = user;
+        });
+        print(log_user.email);
+        print(log_user.uid);
+      } else {
+        print("null");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,45 +64,46 @@ class _ProfilePageState extends State<ProfilePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Align(
-                      alignment: Alignment.center,
-                      child: CircleAvatar(
-                        radius: 70.0,
-                        backgroundColor: Colors.black12,
-                        child: _image != null
-                            ? ClipOval(
-                                child: SizedBox(
-                                  height: 130,
-                                  width: 130,
-                                  child: Image.file(
-                                    _image,
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                              )
-                            : ClipOval(
-                                child: SizedBox(
-                                width: 130,
+                    alignment: Alignment.center,
+                    child: CircleAvatar(
+                      radius: 70.0,
+                      backgroundColor: Colors.black12,
+                      child: _image != null
+                          ? ClipOval(
+                              child: SizedBox(
                                 height: 130,
-                                child: Image(
-                                  image: AssetImage(
-                                    'assets/dummyprofile.jpg',
-                                  ),
+                                width: 130,
+                                child: Image.file(
+                                  _image,
                                   fit: BoxFit.fill,
                                 ),
-                              )),
-                      )),
+                              ),
+                            )
+                          : ClipOval(
+                              child: SizedBox(
+                                width: 130,
+                                height: 130,
+                                child: Image.network(
+                                  "",
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            ),
+                    ),
+                  ),
                   Padding(
-                      padding: EdgeInsets.only(top: 60.0),
-                      child: IconButton(
-                        icon: Icon(
-                          FontAwesomeIcons.camera,
-                          size: 30.0,
-                          color: Colors.black,
-                        ),
-                        onPressed: () {
-                          getImage();
-                        },
-                      )),
+                    padding: EdgeInsets.only(top: 60.0),
+                    child: IconButton(
+                      icon: Icon(
+                        FontAwesomeIcons.camera,
+                        size: 30.0,
+                        color: Colors.black,
+                      ),
+                      onPressed: () {
+                        getImage();
+                      },
+                    ),
+                  ),
                 ],
               ),
               Row(
@@ -121,9 +146,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                   width: MediaQuery.of(context).size.width * 0.8,
                   decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(color: Colors.black)),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(color: Colors.black),
+                  ),
                   child: TextFormField(
                     cursorColor: Colors.black,
                     // validator: valiadetName,
@@ -167,16 +193,20 @@ class _ProfilePageState extends State<ProfilePage> {
                       'Please Select Your Gender'), // Not necessary for Option 1
                   value: _selectedGender,
                   onChanged: (newValue) {
-                    setState(() {
-                      _selectedGender = newValue;
-                    });
-                  },
-                  items: genderlist.map((location) {
-                    return DropdownMenuItem(
-                      child: Text(location),
-                      value: location,
+                    setState(
+                      () {
+                        _selectedGender = newValue;
+                      },
                     );
-                  }).toList(),
+                  },
+                  items: genderlist.map(
+                    (location) {
+                      return DropdownMenuItem(
+                        child: Text(location),
+                        value: location,
+                      );
+                    },
+                  ).toList(),
                 ),
               ),
               Container(
@@ -243,13 +273,19 @@ class _ProfilePageState extends State<ProfilePage> {
                     await Firestore.instance
                         .collection("Users")
                         .document(widget.id)
-                        .updateData({
-                      "Name": _nameController.text,
-                      "Mobile_Number": _numberController.text,
-                      "Gender": _selectedGender,
-                    });
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Screen8()));
+                        .updateData(
+                      {
+                        "Name": _nameController.text,
+                        "Mobile_Number": _numberController.text,
+                        "Gender": _selectedGender,
+                      },
+                    );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Screen8(),
+                      ),
+                    );
                   },
                 ),
               )
@@ -263,8 +299,10 @@ class _ProfilePageState extends State<ProfilePage> {
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
-    setState(() {
-      _image = File(pickedFile.path);
-    });
+    setState(
+      () {
+        _image = File(pickedFile.path);
+      },
+    );
   }
 }

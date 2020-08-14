@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:society/screens/add_store.dart';
 import 'package:society/screens/orderDetails.dart';
 import 'package:society/screens/profilepage.dart';
@@ -26,6 +27,7 @@ List<Widget> _widgetList = [
 
 int _currentIndex = 0;
 bool _search = true;
+bool _sending = false;
 
 //import 'package:society/screens/cart.dart';
 class Screen8 extends StatefulWidget {
@@ -39,52 +41,55 @@ class _Screen8State extends State<Screen8> {
     //final prodProvider = Provider.of<Product>(context);
     //final prodList = prodProvider.items;
     double wid = MediaQuery.of(context).size.width;
-    return Scaffold(
-      backgroundColor: Colors.grey.shade200,
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.black,
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.card_travel, color: Colors.black),
-            title: new Text(
-              "Buy",
-              style: new TextStyle(color: Colors.black),
+    return ModalProgressHUD(
+      inAsyncCall: _sending,
+      child: Scaffold(
+        backgroundColor: Colors.grey.shade200,
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          selectedItemColor: Colors.black,
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.card_travel, color: Colors.black),
+              title: new Text(
+                "Buy",
+                style: new TextStyle(color: Colors.black),
+              ),
             ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.store, color: Colors.black),
-            title: new Text(
-              "My Store",
-              style: new TextStyle(color: Colors.black),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.store, color: Colors.black),
+              title: new Text(
+                "My Store",
+                style: new TextStyle(color: Colors.black),
+              ),
             ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.format_list_bulleted,
-              color: Colors.black,
-            ),
-            title: new Text(
-              "My Order",
-              style: new TextStyle(color: Colors.black),
-            ),
-          ),
-          BottomNavigationBarItem(
+            BottomNavigationBarItem(
               icon: Icon(
-                Icons.person,
+                Icons.format_list_bulleted,
                 color: Colors.black,
               ),
-              title: new Text("Profile",
-                  style: new TextStyle(color: Colors.black))),
-        ],
+              title: new Text(
+                "My Order",
+                style: new TextStyle(color: Colors.black),
+              ),
+            ),
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.person,
+                  color: Colors.black,
+                ),
+                title: new Text("Profile",
+                    style: new TextStyle(color: Colors.black))),
+          ],
+        ),
+        body: _widgetList[_currentIndex],
       ),
-      body: _widgetList[_currentIndex],
     );
   }
 }
@@ -262,15 +267,10 @@ Container card(double width, BuildContext context) {
                 color: Colors.grey,
               ),
             ),
-//            child: new Image.asset('assets/user.png',
-//              height: 200,
-//              width: width/2 ,
-//              fit: BoxFit.cover,
-//            ),
           ),
           new ListTile(
             title: new Text("Shweta Groceries",
-            // store title
+                // store title
                 style: new TextStyle(color: Colors.black, fontSize: 18)),
             subtitle: new Text("\nAll the "),
             contentPadding: EdgeInsets.all(5.0),

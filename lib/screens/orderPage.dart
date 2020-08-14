@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:society/screens/welcome.dart';
 
 class OrderPage extends StatefulWidget {
   @override
@@ -7,10 +8,39 @@ class OrderPage extends StatefulWidget {
 
 List cartList = ["Blouse Fitting", "Hand Jewellery"];
 
-
-
 var addDt = DateTime.now();
+
 class _OrderPageState extends State<OrderPage> {
+  @override
+  void initState() {
+    googleSignIn.signInSilently().then(
+      (value) {
+        setState(() {
+          currentgoogleuserid = value.id; // use this code
+        });
+        print("this page $currentgoogleuserid");
+      },
+    ).catchError(
+      (error) {
+        print(error);
+      },
+    );
+    print("inoint");
+    super.initState();
+    googleSignIn.signInSilently().then(
+      (value) {
+        setState(() {
+          currentgoogleuserid = value.id; //use this id
+        });
+        print(currentgoogleuserid);
+      },
+    ).catchError(
+      (error) {
+        print(error);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     double wid = MediaQuery.of(context).size.width;

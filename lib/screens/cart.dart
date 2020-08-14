@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:society/screens/categories.dart';
 import 'package:society/screens/screen12.dart';
+import 'package:society/screens/welcome.dart';
 import 'package:society/utils/widgetCart.dart';
 import 'myProducts.dart';
 
@@ -22,6 +23,25 @@ int val1 = 1;
 int val2 = 1;
 
 class _CartState extends State<Cart> {
+  @override
+  void initState() {
+    googleSignIn.signInSilently().then(
+      (value) {
+        setState(() {
+          currentgoogleuserid = value.id; // use this
+        });
+        print("from this    $currentgoogleuserid");
+      },
+    ).catchError(
+      (error) {
+        print(error);
+      },
+    );
+    setState(() {
+      // get_user();
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     double wid = MediaQuery.of(context).size.width;

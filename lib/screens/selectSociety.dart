@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:nominatim_location_picker/nominatim_location_picker.dart';
 import 'package:nominatim_location_picker/nominatim_location_picker.dart';
 import 'package:nominatim_location_picker/nominatim_location_picker.dart';
@@ -82,246 +83,262 @@ class _SelectSocietyPageState extends State<SelectSocietyPage> {
       Icon(MdiIcons.laserPointer),
     ),
   ];
-
+  bool _sending = false;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 80.0),
-                    child: Container(
-                      width: 80,
-                      height: 80,
-                      child: Image.asset(
-                        "assets/add-group.png",
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30.0),
-                    child: Text(
-                      "Select Your Society",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: "Times new Roman"),
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 10),
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 5),
-                // width: MediaQuery.of(context).size.width * 0.8,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+    return ModalProgressHUD(
+      inAsyncCall: _sending,
+      child: Scaffold(
+        body: Container(
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text(
-                      "Select City",
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 15.0,
-                          fontFamily: "Times new Roman"),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 80.0),
+                      child: Container(
+                        width: 80,
+                        height: 80,
+                        child: Image.asset(
+                          "assets/add-group.png",
+                          color: Colors.black,
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              ),
-              GestureDetector(
-                onTap: () async {
-                  await getLocationWithNominatim();
-                  var api_key_main = await Firestore.instance
-                      .collection("api_key")
-                      .document("api_key")
-                      .get();
-                  String key = api_key_main.data["key"];
-                  http.Response res = await http.get(
-                      "https://us1.locationiq.com/v1/reverse.php?key=$key&lat=$lat&lon=$lon&format=json");
-                  setState(() {
-                    if (jsonDecode(res.body)["address"]["city"] == null) {
-                      _selectedcity = jsonDecode(res.body)["address"]
-                              ["county"] +
-                          ", " +
-                          jsonDecode(res.body)["address"]["state"] +
-                          ", " +
-                          jsonDecode(res.body)["address"]["country"];
-                    } else {
-                      _selectedcity = jsonDecode(res.body)["address"]["city"] +
-                          ", " +
-                          jsonDecode(res.body)["address"]["state"] +
-                          ", " +
-                          jsonDecode(res.body)["address"]["country"];
-                    }
-                  });
-                },
-                child: Container(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30.0),
+                      child: Text(
+                        "Select Your Society",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: "Times new Roman"),
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 5),
+                  // width: MediaQuery.of(context).size.width * 0.8,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Select City",
+                        style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 15.0,
+                            fontFamily: "Times new Roman"),
+                      ),
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    setState(() {
+                      _sending = true;
+                    });
+                    await getLocationWithNominatim();
+                    var api_key_main = await Firestore.instance
+                        .collection("api_key")
+                        .document("api_key")
+                        .get();
+                    String key = api_key_main.data["key"];
+                    http.Response res = await http.get(
+                        "https://us1.locationiq.com/v1/reverse.php?key=$key&lat=$lat&lon=$lon&format=json");
+                    setState(
+                      () {
+                        if (jsonDecode(res.body)["address"]["city"] == null) {
+                          _selectedcity = jsonDecode(res.body)["address"]
+                                  ["county"] +
+                              ", " +
+                              jsonDecode(res.body)["address"]["state"] +
+                              ", " +
+                              jsonDecode(res.body)["address"]["country"];
+                        } else {
+                          _selectedcity = jsonDecode(res.body)["address"]
+                                  ["city"] +
+                              ", " +
+                              jsonDecode(res.body)["address"]["state"] +
+                              ", " +
+                              jsonDecode(res.body)["address"]["country"];
+                        }
+                        _sending = false;
+                      },
+                    );
+                  },
+                  child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(5),
+                          border: Border.all(color: Colors.black)),
+                      margin: EdgeInsets.symmetric(vertical: 10),
+                      padding: EdgeInsets.all(20),
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      child: Row(
+                        children: <Widget>[Text(_selectedcity)],
+                      )),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 5),
+                  // width: MediaQuery.of(context).size.width * 0.8,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Text("Select Your Society",
+                          style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 15.0,
+                              fontFamily: "Times new Roman")),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
+                  child: TextField(
+                    controller: societyController,
+                    autocorrect: true,
+                    decoration: InputDecoration(
+                        labelText: "Society:",
+                        fillColor: Colors.white,
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            borderSide: BorderSide(color: Colors.black))),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 5),
+                  // width: MediaQuery.of(context).size.width * 0.8,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Text("Full Address",
+                          style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 15.0,
+                              fontFamily: "Times new Roman")),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                  child: Container(
+                    margin: EdgeInsets.symmetric(vertical: 5),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    width: MediaQuery.of(context).size.width * 0.8,
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(5),
                         border: Border.all(color: Colors.black)),
-                    margin: EdgeInsets.symmetric(vertical: 10),
-                    padding: EdgeInsets.all(20),
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    child: Row(
-                      children: <Widget>[Text(_selectedcity)],
-                    )),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 10),
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 5),
-                // width: MediaQuery.of(context).size.width * 0.8,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Text("Select Your Society",
+                    child: TextFormField(
+                      cursorColor: Colors.black,
+                      // validator: valiadetName,
+                      onSaved: (value) {
+                        address = value;
+                      },
+                      keyboardType: TextInputType.text,
+                      controller: addressController,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 5),
+                  // width: MediaQuery.of(context).size.width * 0.8,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Select State",
                         style: TextStyle(
                             color: Colors.grey,
                             fontSize: 15.0,
-                            fontFamily: "Times new Roman")),
-                  ],
+                            fontFamily: "Times new Roman"),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
-                child: TextField(
-                  controller: societyController,
-                  autocorrect: true,
-                  decoration: InputDecoration(
-                      labelText: "Society:",
-                      fillColor: Colors.white,
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          borderSide: BorderSide(color: Colors.black))),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 10),
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 5),
-                // width: MediaQuery.of(context).size.width * 0.8,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Text("Full Address",
-                        style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 15.0,
-                            fontFamily: "Times new Roman")),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 10, right: 10, bottom: 5),
-                child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 5),
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                  width: MediaQuery.of(context).size.width * 0.8,
+                Container(
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(5),
                       border: Border.all(color: Colors.black)),
-                  child: TextFormField(
-                    cursorColor: Colors.black,
-                    // validator: valiadetName,
-                    onSaved: (value) {
-                      address = value;
+                  margin: EdgeInsets.symmetric(vertical: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: DropdownButton(
+                    isExpanded: true,
+                    hint: Text('State'), // Not necessary for Option 1
+                    value: _selectedstate,
+                    onChanged: (newValue) {
+                      setState(() {
+                        _selectedstate = newValue;
+                      });
                     },
-                    keyboardType: TextInputType.text,
-                    controller: addressController,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                    ),
+                    items: states.map((location) {
+                      return DropdownMenuItem(
+                        child: Text(location),
+                        value: location,
+                      );
+                    }).toList(),
                   ),
                 ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 10),
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 5),
-                // width: MediaQuery.of(context).size.width * 0.8,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "Select State",
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                  width: MediaQuery.of(context).size.width * 0.84,
+                  height: MediaQuery.of(context).size.height * 0.1,
+                  // alignment: Alignment.bottomRight,
+                  child: RaisedButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                        side: BorderSide(color: Colors.grey)),
+                    child: Text(
+                      "DONE",
                       style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 15.0,
-                          fontFamily: "Times new Roman"),
+                          color: Colors.white,
+                          fontFamily: "Times new Roman",
+                          fontSize: 15.0),
                     ),
-                  ],
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(5),
-                    border: Border.all(color: Colors.black)),
-                margin: EdgeInsets.symmetric(vertical: 10),
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: DropdownButton(
-                  isExpanded: true,
-                  hint: Text('State'), // Not necessary for Option 1
-                  value: _selectedstate,
-                  onChanged: (newValue) {
-                    setState(() {
-                      _selectedstate = newValue;
-                    });
-                  },
-                  items: states.map((location) {
-                    return DropdownMenuItem(
-                      child: Text(location),
-                      value: location,
-                    );
-                  }).toList(),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 10),
-                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                width: MediaQuery.of(context).size.width * 0.84,
-                height: MediaQuery.of(context).size.height * 0.1,
-                // alignment: Alignment.bottomRight,
-                child: RaisedButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                      side: BorderSide(color: Colors.grey)),
-                  child: Text(
-                    "DONE",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: "Times new Roman",
-                        fontSize: 15.0),
+                    // color: Colors.white,
+                    color: Color.fromRGBO(1, 44, 50, 0.8),
+                    onPressed: () async {
+                      await Firestore.instance
+                          .collection("Users")
+                          .document(widget.id)
+                          .updateData({
+                        "User_city": _selectedcity,
+                        "society_name": societyController.text,
+                        "full_address": addressController.text,
+                        "User_state": _selectedstate,
+                      });
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProfilePage(
+                            id: widget.id,
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                  // color: Colors.white,
-                  color: Color.fromRGBO(1, 44, 50, 0.8),
-                  onPressed: () async {
-                    await Firestore.instance
-                        .collection("Users")
-                        .document(widget.id)
-                        .updateData({
-                      "User_city": _selectedcity,
-                      "society_name": societyController.text,
-                      "full_address": addressController.text,
-                      "User_state": _selectedstate,
-                    });
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => ProfilePage(id: widget.id,)));
-                  },
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),
