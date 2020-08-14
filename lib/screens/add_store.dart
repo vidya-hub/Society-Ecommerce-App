@@ -37,10 +37,27 @@ class _AddStoreState extends State<AddStore> {
         print(error);
       },
     );
+    get_store();
     setState(() {
       get_user();
     });
     super.initState();
+  }
+
+  get_store() async {
+    final _exists = await Firestore.instance
+        .collection("AddStore")
+        .document(currentgoogleuserid)
+        .get();
+    print(_exists.data);
+    if (_exists.exists) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AddProductScreen(),
+        ),
+      );
+    }
   }
 
   void get_user() async {
@@ -129,34 +146,9 @@ class _AddStoreState extends State<AddStore> {
     );
   }
 
-  // @override
-  // void initState() {
-  //   googleSignIn.signInSilently().then(
-  //     (value) {
-  //       setState(() {
-  //         currentgoogleuserid = value.id;
-  //       });
-  //       print("this page $currentgoogleuserid");
-  //     },
-  //   ).catchError(
-  //     (error) {
-  //       print(error);
-  //     },
-  //   );
-  //   setState(() {
-  //     get_user();
-  //   });
-  //   super.initState();
-  // }
-
   var selectedCategory;
   @override
   storeData() async {
-    // setState(
-    //   () {
-    //     _sending = true;
-    //   },
-    // );
     await compressImage();
 
     String mediaUrl = await uploadImage(_image);
@@ -169,11 +161,6 @@ class _AddStoreState extends State<AddStore> {
 
     _nameController.clear();
     _desccontroller.clear();
-    // setState(
-    //   () {
-    //     _sending = false;
-    //   },
-    // );
   }
 
   bool _sending = false;

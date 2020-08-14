@@ -32,23 +32,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final _auth = FirebaseAuth.instance;
   FirebaseUser log_user;
 
-  // void get_user() async {
-  //   final user = await _auth.currentUser();
 
-  //   try {
-  //     if (user != null) {
-  //       setState(() {
-  //         log_user = user;
-  //       });
-  //       print(log_user.email);
-  //       print(log_user.uid);
-  //     } else {
-  //       print("null");
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
 
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
