@@ -3,10 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:society/screens/cart.dart';
 
 class Producttile extends StatefulWidget {
-  String product_url, productName, productprice, productid;
+  String product_url;
+  String productName, productprice;
+  var productid;
+  //  mycolor;
+  // var onpressed;
+  // var isSelected;
 
   Producttile(
       {@required this.product_url,
+      // @required this.onpressed,
+      // @required this.isSelected,
+      // @required this.mycolor,
       @required this.productName,
       @required this.productprice,
       @required this.productid});
@@ -17,6 +25,19 @@ class Producttile extends StatefulWidget {
 
 class _ProducttileState extends State<Producttile> {
   TextEditingController editingController = TextEditingController();
+  // var isSelected = false;
+  // var mycolor = Colors.white;
+  // void toggleSelection() {
+  //   setState(() {
+  //     if (widget.isSelected) {
+  //       widget.mycolor = Colors.white;
+  //       widget.isSelected = false;
+  //     } else {
+  //       widget.mycolor = Colors.grey[300];
+  //       widget.isSelected = true;
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +51,7 @@ class _ProducttileState extends State<Producttile> {
       child: SizedBox(
         height: 1000,
         child: Card(
+          // color: widget.mycolor,
           clipBehavior: Clip.antiAliasWithSaveLayer,
           elevation: 5,
           child: new Column(
@@ -40,56 +62,22 @@ class _ProducttileState extends State<Producttile> {
                 color: Colors.grey,
               ),
               ListTile(
-                title: new Text(
-                  widget.productName,
-                  textAlign: TextAlign.center,
-                  style: new TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: 18),
-                ),
-                subtitle: new Text(
-                  widget.productprice,
-                  textAlign: TextAlign.center,
-                ),
-                contentPadding: EdgeInsets.all(5.0),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  new InkWell(
-                    child: Icon(
-                      Icons.arrow_left,
-                      color: Colors.black,
-                    ),
-                    onTap: () {
-                      int currentValue = val2;
-                      setState(() {
-                        currentValue--;
-                        val2 = (currentValue >= 0 ? currentValue : 0);
-                      });
-                    },
+                  title: new Text(
+                    widget.productName,
+                    textAlign: TextAlign.center,
+                    style: new TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: 18),
                   ),
-                  new Text(
-                    '$val2',
-                    style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),
+                  subtitle: new Text(
+                    widget.productprice,
+                    textAlign: TextAlign.center,
                   ),
-                  new InkWell(
-                    child: Icon(
-                      Icons.arrow_right,
-                      color: Colors.black,
-                    ),
-                    onTap: () {
-                      int currentValue = val2;
-                      setState(() {
-                        currentValue++;
-                        val2 = (currentValue >= 0 ? currentValue : 0);
-                      });
-                    },
-                  ),
-                ],
-              ),
+                  contentPadding: EdgeInsets.all(5.0),
+                  onTap: () {
+                    print("pressed");
+                  }),
             ],
           ),
         ),

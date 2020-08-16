@@ -300,8 +300,6 @@ class _AddStoreState extends State<AddStore> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: <Widget>[
-                                        // Icon(FontAwesomeIcons.coins,
-                                        //     size: 25.0, color: Color(0xff11b719)),
                                         SizedBox(width: 20.0),
                                         DropdownButton(
                                           items: categoryItems,

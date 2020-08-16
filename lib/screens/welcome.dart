@@ -21,6 +21,7 @@ var newFormat = DateFormat("dd-MMMM-y");
 var sp;
 String currentgoogleuserid;
 final GoogleSignIn googleSignIn = GoogleSignIn();
+var ver_id;
 
 class _WelcomePageState extends State<WelcomePage> {
   static const routeName = '/WelcomePage';
@@ -33,10 +34,12 @@ class _WelcomePageState extends State<WelcomePage> {
   void initState() {
     // print("inoint");
     super.initState();
+
     googleSignIn.isSignedIn().then(
           (value) => {
             if (value)
               {
+                // print(ver_id),
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -45,7 +48,9 @@ class _WelcomePageState extends State<WelcomePage> {
                 )
               }
             else
-              {print("else part")}
+              {
+                print("else part"),
+              }
           },
         );
   }

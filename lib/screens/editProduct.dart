@@ -118,16 +118,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
     super.initState();
   }
 
-  // getUser() async {
-  //   GoogleSignIn gs = GoogleSignIn(scopes: ['email']);
-  //   GoogleSignInAccount google_user = await gs.signIn();
-  //   var snapshot = await Firestore.instance
-  //       .collection("Product")
-  //       .document(google_user.id)
-  //       .collection('products')
-  //       .document(widget.productId) //null
-  //       .get();
-  // }
 
   void setStoreName() async {
     var data = await Firestore.instance
@@ -158,12 +148,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => Screen16(
-                widget.productId,
-                mediaUrl,
-                _nameController.text,
-                _descController.text,
-                _priceController.text)),
+          builder: (context) => Screen16(
+              widget.productId,
+              mediaUrl,
+              _nameController.text,
+              _descController.text,
+              _priceController.text),
+        ),
       );
     }
 

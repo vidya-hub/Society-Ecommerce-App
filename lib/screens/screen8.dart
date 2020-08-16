@@ -19,63 +19,27 @@ List<String> categories = [
   "Books"
 ];
 
-var societyName;
-var cityName;
 int _currentIndex = 0;
 bool _search = true;
 bool nostore = true;
 var catValue = "All";
 
-//import 'package:society/screens/cart.dart';
 class Screen8 extends StatefulWidget {
   @override
   _Screen8State createState() => _Screen8State();
 }
 
-String currentgoogleuserid;
+var currentgoogleuserid;
 final GoogleSignIn googleSignIn = GoogleSignIn();
 
 class _Screen8State extends State<Screen8> {
-  @override
-  void initState() {
-    // print(Firestore.instance.collection("AddStore").snapshots());
-    googleSignIn.signInSilently().then(
-      (value) {
-        setState(
-          () {
-            currentgoogleuserid = value.id;
-            setDetails(currentgoogleuserid);
-          },
-        );
-        print("this page $currentgoogleuserid");
-        // get_store(currentgoogleuserid);
-      },
-    ).catchError(
-      (error) {
-        print(error);
-      },
-    );
-
-    super.initState();
-  }
-
-  void setDetails(id) async {
-    var snapshot =
-        await Firestore.instance.collection("Users").document(id).get();
-    setState(() {
-      societyName = snapshot.data["society_name"];
-      cityName = snapshot.data["User_city"];
-      print(societyName);
-      print(cityName);
-    });
-  }
-
   List<Widget> _widgetList = [
     Screen8_wid(),
     AddStore(),
     OrderDetails(),
     AccountPage(),
   ];
+
   Future<bool> _pressBack() {
     return showDialog(
       context: context,
@@ -110,9 +74,11 @@ class _Screen8State extends State<Screen8> {
           selectedItemColor: Colors.black,
           currentIndex: _currentIndex,
           onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
+            setState(
+              () {
+                _currentIndex = index;
+              },
+            );
           },
           items: [
             BottomNavigationBarItem(
@@ -171,6 +137,10 @@ Stream stream_cat = Firestore.instance
     .snapshots();
 
 class _Screen8_widState extends State<Screen8_wid> {
+  String societyName = "loading...";
+  String cityName = "loading...";
+
+
   Widget SocietyCards() {
     return SingleChildScrollView(
       physics: ClampingScrollPhysics(),
@@ -201,7 +171,7 @@ class _Screen8_widState extends State<Screen8_wid> {
                                   crossAxisSpacing: 15.0,
                                 ),
                                 itemBuilder: (context, index) {
-                                  print(index);
+                                  // print(index);
                                   return SocietyTile(
                                     s_photoUrl: snapshot.data.documents[index]
                                         .data['s_photoUrl'],
@@ -258,7 +228,7 @@ class _Screen8_widState extends State<Screen8_wid> {
                           child: Row(
                             children: [
                               Text(
-                                societyName,
+                                "$societyName",
                                 style: new TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -286,9 +256,7 @@ class _Screen8_widState extends State<Screen8_wid> {
                             ],
                           ),
                         ),
-                        Text(
-                          "$cityName",
-                        ),
+                        Text("$cityName"),
                       ],
                     ),
                   ),
@@ -357,5 +325,28 @@ class _Screen8_widState extends State<Screen8_wid> {
         ),
       ],
     );
+  }
+
+  @override
+  void initState() {
+    googleSignIn.signInSilently().then((value) => {
+          print(value.id),
+          setDetails(value.id),
+        });
+    super.initState();
+  }
+
+  setDetails(currentgoogleuserid) async {
+    print(currentgoogleuserid);
+    var snapshot = await Firestore.instance
+        .collection("Users")
+        .document(currentgoogleuserid)
+        .get();
+    setState(() {
+      societyName = snapshot.data["society_name"];
+      cityName = snapshot.data["User_city"];
+    });
+    // print(societyName);
+    // print(cityName);
   }
 }
