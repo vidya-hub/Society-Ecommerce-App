@@ -27,7 +27,6 @@ class _ProducttileState extends State<Producttile> {
       fit: BoxFit.cover,
     );
     return Container(
-      // height: Media,
       child: SizedBox(
         height: 1000,
         child: Card(

@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:society/screens/AddSociety.dart';
-import 'package:society/screens/add_product_screen.dart';
-import 'dart:convert';
 
 import 'package:society/screens/drawerScreen.dart';
 

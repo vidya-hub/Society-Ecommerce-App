@@ -9,6 +9,7 @@ import 'package:image/image.dart' as Img;
 import 'package:intl/intl.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:society/screens/screen13.dart';
 import 'package:society/screens/screen16.dart';
 import 'package:society/screens/welcome.dart';
 import 'package:uuid/uuid.dart';
@@ -19,10 +20,31 @@ class AddProductScreen extends StatefulWidget {
 }
 
 final StorageReference storageRef = FirebaseStorage.instance.ref();
+String currentgoogleuserid;
+final GoogleSignIn googleSignIn = GoogleSignIn();
 
 class _AddProductScreenState extends State<AddProductScreen> {
+  // @override
+  // void initState() {
+  // get_store();
+  //   googleSignIn.signInSilently().then(
+  //     (value) {
+  //       setState(() {
+  //         currentgoogleuserid = value.id;
+  //       });
+  //       print("this page $currentgoogleuserid");
+  //     },
+  //   ).catchError(
+  //     (error) {
+  //       print(error);
+  //     },
+  //   );
+  //   super.initState();
+  // }
+
   String _name;
   File _image;
+  String productID;
   final picker = ImagePicker();
   String postId = Uuid().v4();
   TextEditingController _nameController = TextEditingController();
@@ -31,8 +53,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   final _auth = FirebaseAuth.instance;
   FirebaseUser log_user;
-
-
 
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
@@ -83,7 +103,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
         .document();
     var addDt = DateTime.now();
     var newFormat = DateFormat("dd-MMMM-y");
-
+    setState(() {
+      productID = documentReference.documentID;
+      print('product id' + productID);
+    });
     String productId = documentReference.documentID;
 
     documentReference.setData(
@@ -114,9 +137,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
         print(error);
       },
     );
-    // setState(() {
-    //   get_user();
-    // });
     super.initState();
   }
 
@@ -137,7 +157,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Screen16()),
+        MaterialPageRoute(
+            builder: (context) => Screen16(
+                productID,
+                mediaUrl,
+                _nameController.text,
+                _descController.text,
+                _priceController.text)),
       );
     }
 
@@ -151,14 +177,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
             Stack(
               children: [
                 Container(
-                  // padding: EdgeInsets.only(top: 6.0),
-
                   height: MediaQuery.of(context).size.height * 0.50,
-
                   color: Colors.grey[300],
-
                   width: double.infinity,
-
                   child: _image == null
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -177,7 +198,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 getImage();
                               },
                               child: Text(
-                                'Add a Store image',
+                                'Add a Product image',
                                 style: TextStyle(
                                   fontSize: 20,
                                 ),
@@ -215,6 +236,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   },
                   keyboardType: TextInputType.text,
                   controller: _nameController,
+                  maxLength: 20,
                   decoration: InputDecoration(
                       // icon: Icon(Icons.people, color: Colors.black),
                       labelText: "Write Product Name",
@@ -222,13 +244,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       labelStyle:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ),
-                Text(
-                  'Shweta Jewls',
-                  style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold),
-                ),
+
                 //Text('Write description about the product', style: TextStyle(color: Colors, fontSize:18, fontWeight: FontWeight.bold),),
 
                 TextFormField(
@@ -237,6 +253,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   onSaved: (value) {
                     _name = value;
                   },
+                  maxLength: 20,
                   keyboardType: TextInputType.text,
                   controller: _descController,
                   decoration: InputDecoration(
@@ -252,14 +269,16 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   onSaved: (value) {
                     _name = value;
                   },
-                  keyboardType: TextInputType.text,
+                  maxLength: 10,
+                  keyboardType: TextInputType.number,
                   controller: _priceController,
                   decoration: InputDecoration(
-                      // icon: Icon(Icons.people, color: Colors.black),
-                      labelText: "Price",
-                      border: InputBorder.none,
-                      labelStyle:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    // icon: Icon(Icons.people, color: Colors.black),
+                    labelText: "Price",
+                    border: InputBorder.none,
+                    labelStyle:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ],
             )),
@@ -275,8 +294,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   });
                   productSave();
                   setState(() {
-                    _storing = true;
+                    _storing = false;
                   });
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Screen13(),
+                    ),
+                  );
                 },
                 child: Text(
                   'ADD TO MY STORE',

@@ -1,14 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:society/screens/welcome.dart';
 import '../screens/add_store.dart';
 import '../screens/orderDetails.dart';
-import '../screens/profilepage.dart';
 import '../screens/selectSociety.dart';
 import '../screens/screen13.dart';
 import 'accountPage.dart';
-import 'cart.dart';
-import 'findSociety.dart';
-import './crud.dart';
 import './societytiles.dart';
 
 List<String> categories = [
@@ -19,15 +18,13 @@ List<String> categories = [
   "Games",
   "Books"
 ];
-List<Widget> _widgetList = [
-  Screen8_wid(),
-  AddStore(),
-  OrderDetails(),
-  AccountPage(),
-];
 
+var societyName;
+var cityName;
 int _currentIndex = 0;
 bool _search = true;
+bool nostore = true;
+var catValue = "All";
 
 //import 'package:society/screens/cart.dart';
 class Screen8 extends StatefulWidget {
@@ -35,58 +32,127 @@ class Screen8 extends StatefulWidget {
   _Screen8State createState() => _Screen8State();
 }
 
+String currentgoogleuserid;
+final GoogleSignIn googleSignIn = GoogleSignIn();
+
 class _Screen8State extends State<Screen8> {
   @override
+  void initState() {
+    // print(Firestore.instance.collection("AddStore").snapshots());
+    googleSignIn.signInSilently().then(
+      (value) {
+        setState(
+          () {
+            currentgoogleuserid = value.id;
+            setDetails(currentgoogleuserid);
+          },
+        );
+        print("this page $currentgoogleuserid");
+        // get_store(currentgoogleuserid);
+      },
+    ).catchError(
+      (error) {
+        print(error);
+      },
+    );
+
+    super.initState();
+  }
+
+  void setDetails(id) async {
+    var snapshot =
+        await Firestore.instance.collection("Users").document(id).get();
+    setState(() {
+      societyName = snapshot.data["society_name"];
+      cityName = snapshot.data["User_city"];
+      print(societyName);
+      print(cityName);
+    });
+  }
+
+  List<Widget> _widgetList = [
+    Screen8_wid(),
+    AddStore(),
+    OrderDetails(),
+    AccountPage(),
+  ];
+  Future<bool> _pressBack() {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Do you want to close this app?'),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Yes'),
+            onPressed: () {
+              Navigator.pop(context, true);
+            },
+          ),
+          FlatButton(
+            child: Text('No'),
+            onPressed: () {
+              Navigator.pop(context, false);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    //final prodProvider = Provider.of<Product>(context);
-    //final prodList = prodProvider.items;
-    double wid = MediaQuery.of(context).size.width;
-    return Scaffold(
-      backgroundColor: Colors.grey.shade200,
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.black,
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.card_travel, color: Colors.black),
-            title: new Text(
-              "Buy",
-              style: new TextStyle(color: Colors.black),
+    return WillPopScope(
+      onWillPop: _pressBack,
+      child: Scaffold(
+        backgroundColor: Colors.grey.shade200,
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          selectedItemColor: Colors.black,
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.card_travel, color: Colors.black),
+              title: new Text(
+                "Buy",
+                style: new TextStyle(color: Colors.black),
+              ),
             ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.store, color: Colors.black),
-            title: new Text(
-              "My Store",
-              style: new TextStyle(color: Colors.black),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.store, color: Colors.black),
+              title: new Text(
+                "My Store",
+                style: new TextStyle(color: Colors.black),
+              ),
             ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.format_list_bulleted,
-              color: Colors.black,
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.format_list_bulleted,
+                color: Colors.black,
+              ),
+              title: new Text(
+                "My Order",
+                style: new TextStyle(color: Colors.black),
+              ),
             ),
-            title: new Text(
-              "My Order",
-              style: new TextStyle(color: Colors.black),
-            ),
-          ),
-          BottomNavigationBarItem(
+            BottomNavigationBarItem(
               icon: Icon(
                 Icons.person,
                 color: Colors.black,
               ),
-              title: new Text("Profile",
-                  style: new TextStyle(color: Colors.black))),
-        ],
+              title: new Text(
+                "Profile",
+                style: new TextStyle(color: Colors.black),
+              ),
+            ),
+          ],
+        ),
+        body: _widgetList[_currentIndex],
       ),
-      body: _widgetList[_currentIndex],
     );
   }
 }
@@ -97,23 +163,28 @@ class Screen8_wid extends StatefulWidget {
 }
 
 var _selectedindex;
+Stream stream_all = Firestore.instance.collection("AddStore").snapshots();
+
+Stream stream_cat = Firestore.instance
+    .collection("AddStore")
+    .where("selected-category", isEqualTo: catValue)
+    .snapshots();
 
 class _Screen8_widState extends State<Screen8_wid> {
-  CrudMethods_store crudMethods = new CrudMethods_store();
-  Stream usersStream;
-
   Widget SocietyCards() {
     return SingleChildScrollView(
       physics: ClampingScrollPhysics(),
       child: Container(
-        child: usersStream != null
+        child: stream_all != null
             ? Column(
                 children: <Widget>[
                   StreamBuilder(
-                    stream: usersStream,
+                    stream: (catValue == "All") ? stream_all : stream_cat,
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
-                        return CircularProgressIndicator();
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
                       } else {
                         return Column(
                           children: [
@@ -130,7 +201,7 @@ class _Screen8_widState extends State<Screen8_wid> {
                                   crossAxisSpacing: 15.0,
                                 ),
                                 itemBuilder: (context, index) {
-                                  // print(index);
+                                  print(index);
                                   return SocietyTile(
                                     s_photoUrl: snapshot.data.documents[index]
                                         .data['s_photoUrl'],
@@ -162,114 +233,70 @@ class _Screen8_widState extends State<Screen8_wid> {
   }
 
   @override
-  void initState() {
-    crudMethods.getData().then(
-      (result) {
-        setState(
-          () {
-            usersStream = result;
-          },
-        );
-      },
-    );
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return ListView(
-      // height: MediaQuery.of(context).size.height,
-      // width: MediaQuery.of(context).size.width,
       children: <Widget>[
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Container(color: Colors.white, height: 40),
+            Container(color: Colors.white, height: 10),
             Container(
-              height: 75,
+              height: 60,
               width: MediaQuery.of(context).size.width,
               color: Colors.white,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Text(""),
-                  _search
-                      ? Container(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        new SizedBox(
+                          height: 10,
+                        ),
+                        Center(
+                          child: Row(
                             children: [
-                              new SizedBox(
-                                height: 17,
-                              ),
-                              Row(children: [
-                                Text(
-                                  "   Apollo DB City",
-                                  style: new TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    //change address
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                SelectSocietyPage()));
-                                  },
-                                  child: new Text(
-                                    " (change)",
-                                    style: new TextStyle(
-                                      color: Colors.lightBlueAccent,
-                                      fontSize: 18,
-                                      //fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ]),
                               Text(
-                                "    " + "Indore" + "Nipania ",
-                                style: TextStyle(
-                                  color: Colors.grey,
+                                societyName,
+                                style: new TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                textAlign: TextAlign.start,
-                              )
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  //change address
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => SelectSocietyPage(),
+                                    ),
+                                  );
+                                },
+                                child: new Text(
+                                  "  (change)",
+                                  style: new TextStyle(
+                                    color: Colors.lightBlueAccent,
+                                    fontSize: 18,
+                                    //fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
-                        )
-                      : Container(
-                          margin: EdgeInsets.fromLTRB(40, 0, 0, 0),
-                          width: 200,
-                          child: TextFormField(
-                            decoration: InputDecoration(hintText: "Search..."),
-                          ),
                         ),
-                  // ....
-                  RawMaterialButton(
-                    onPressed: () {
-                      setState(() {
-                        if (_search) {
-                          _search = false;
-                        } else {
-                          _search = true;
-                        }
-                      });
-                    },
-                    fillColor: Colors.grey[300],
-                    child: Icon(
-                      Icons.search,
-                      size: 23,
+                        Text(
+                          "$cityName",
+                        ),
+                      ],
                     ),
-                    padding: EdgeInsets.all(8.0),
-                    shape: CircleBorder(),
-                  )
+                  ),
                 ],
               ),
             ),
             SizedBox(
-              height: 20,
+              height: 10,
             ),
             Text(
               "     Top Item Categories",
@@ -296,7 +323,27 @@ class _Screen8_widState extends State<Screen8_wid> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25.0),
                         ),
-                        onPressed: () {},
+                        onPressed: () async {
+                          setState(
+                            () {
+                              catValue = categories[i];
+                              stream_cat = Firestore.instance
+                                  .collection("AddStore")
+                                  .where("selected-category",
+                                      isEqualTo: catValue)
+                                  .snapshots();
+                            },
+                          );
+                          await Firestore.instance
+                              .collection("AddStore")
+                              .where("selected-category", isEqualTo: catValue)
+                              .getDocuments()
+                              .then(
+                                (value) => {
+                                  print(value.documents),
+                                },
+                              );
+                        },
                         child: new Text('${categories.elementAt(i)}'),
                       ),
                     ),

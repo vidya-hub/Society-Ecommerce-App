@@ -41,27 +41,11 @@ class _CartState extends State<Cart> {
       },
     );
     get_store();
-    getData().then(
-      (result) {
-        setState(
-          () {
-            usersStream = result;
-          },
-        );
-      },
-    );
     super.initState();
   }
 
   var storename;
   var description;
-  getData() async {
-    return await await Firestore.instance
-        .collection("Product")
-        .document(widget.id)
-        .collection("products")
-        .snapshots();
-  }
 
   get_store() async {
     var store_details = await Firestore.instance
@@ -146,19 +130,26 @@ class _CartState extends State<Cart> {
                 height: MediaQuery.of(context).size.height * 0.69,
                 width: 800,
                 child: Container(
-                  child: usersStream != null
+                  child: Firestore.instance
+                              .collection("Product")
+                              .document(widget.id)
+                              .collection("products")
+                              .snapshots() !=
+                          null
                       ? SingleChildScrollView(
                           child: Column(
                             children: <Widget>[
                               StreamBuilder(
-                                stream: usersStream,
+                                stream: Firestore.instance
+                                    .collection("Product")
+                                    .document(widget.id)
+                                    .collection("products")
+                                    .snapshots(),
                                 builder: (context, snapshot) {
                                   if (!snapshot.hasData) {
                                     return CircularProgressIndicator();
                                   } else {
                                     return Column(
-                                      // mainAxisAlignment:
-                                      //     MainAxisAlignment.spaceEvenly,
                                       children: [
                                         GridView.builder(
                                           physics: ClampingScrollPhysics(),

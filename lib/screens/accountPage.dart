@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import '../main.dart';
 import './selectSociety.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'profilepage.dart';
 import './welcome.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AccountPage extends StatefulWidget {
   var number;
@@ -24,6 +24,8 @@ class _AccountPageState extends State<AccountPage> {
       (value) {
         setState(() {
           currentgoogleuserid = value.id;
+          imgurl = value.photoUrl;
+          set_data(currentgoogleuserid);
         });
         print("from this    $currentgoogleuserid");
       },
@@ -32,30 +34,23 @@ class _AccountPageState extends State<AccountPage> {
         print(error);
       },
     );
-    setState(() {
-      get_user();
-    });
+
     super.initState();
   }
 
-  void get_user() async {
-    final user = await _auth.currentUser();
-
-    try {
-      if (user != null) {
-        setState(() {
-          log_user = user;
-        });
-        print(log_user.email);
-        print(log_user.uid);
-      } else {
-        print("null");
-      }
-    } catch (e) {
-      print(e);
-    }
-    // print(log_user.photoUrl);
+  void set_data(id) async {
+    var data = await Firestore.instance.collection("Users").document(id).get();
+    setState(() {
+      name = data.data["Name"];
+      number = data.data["Mobile_Number"];
+      societyname = data.data["society_name"];
+    });
   }
+
+  String name = "loading...";
+  String number = "loading...";
+  String imgurl = "https://i.stack.imgur.com/34AD2.jpg";
+  String societyname = "loading...";
 
   bool _sending = false;
   Widget build(BuildContext context) {
@@ -74,28 +69,29 @@ class _AccountPageState extends State<AccountPage> {
                       Container(
                         height: 140,
                         width: 140,
-                        child: Image.network(
-                          "${log_user.photoUrl}",
+                        child: Image(
+                          image: NetworkImage(imgurl),
                           fit: BoxFit.fill,
                         ),
                       ),
                       SizedBox(
-                        width: 40.0,
+                        width: 10,
+                        height: 10,
                       ),
                       Column(
                         children: <Widget>[
                           Text(
-                            "Shweta K",
+                            name,
                             style: TextStyle(
                                 fontSize: 25.0,
                                 fontWeight: FontWeight.w600,
                                 fontFamily: "Times New Roman"),
                           ),
                           SizedBox(
-                            height: 20.0,
+                            height: 10.0,
                           ),
                           Text(
-                            "+9145411121154",
+                            societyname,
                             style: TextStyle(
                                 fontSize: 12.0, fontFamily: "Times New Roman"),
                           ),

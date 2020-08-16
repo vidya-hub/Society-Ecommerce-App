@@ -8,10 +8,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:society/screens/add_product_screen.dart';
 import 'package:society/screens/screen13.dart';
 import 'package:image/image.dart' as Img;
-import 'package:society/screens/screen16.dart';
 import 'package:society/screens/welcome.dart';
 
 class AddStore extends StatefulWidget {
@@ -21,6 +19,8 @@ class AddStore extends StatefulWidget {
 
 final _auth = FirebaseAuth.instance;
 FirebaseUser log_user;
+String currentgoogleuserid;
+final GoogleSignIn googleSignIn = GoogleSignIn();
 
 class _AddStoreState extends State<AddStore> {
   @override
@@ -29,6 +29,7 @@ class _AddStoreState extends State<AddStore> {
       (value) {
         setState(() {
           currentgoogleuserid = value.id;
+          get_store(currentgoogleuserid);
         });
         print("this page $currentgoogleuserid");
       },
@@ -37,43 +38,21 @@ class _AddStoreState extends State<AddStore> {
         print(error);
       },
     );
-    get_store();
-    setState(() {
-      get_user();
-    });
     super.initState();
   }
 
-  get_store() async {
-    final _exists = await Firestore.instance
-        .collection("AddStore")
-        .document(currentgoogleuserid)
-        .get();
+  get_store(id) async {
+    final _exists =
+        await Firestore.instance.collection("AddStore").document(id).get();
+    print(id);
     print(_exists.data);
     if (_exists.exists) {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => AddProductScreen(),
+          builder: (context) => Screen13(),
         ),
       );
-    }
-  }
-
-  void get_user() async {
-    final user = await _auth.currentUser();
-    try {
-      if (user != null) {
-        setState(() {
-          log_user = user;
-        });
-        print(log_user.email);
-        print(log_user.uid);
-      } else {
-        print("null");
-      }
-    } catch (e) {
-      print(e);
     }
   }
 
@@ -97,14 +76,14 @@ class _AddStoreState extends State<AddStore> {
 
   var selected_value;
   final StorageReference storageRef = FirebaseStorage.instance.ref();
-  final storeRef = Firestore.instance.collection('Store');
+  final storeRef = Firestore.instance.collection('AddStore');
   compressImage() async {
     final tempDir = await getTemporaryDirectory();
     final path = tempDir.path;
 
     Img.Image imageFile = Img.decodeImage(_image.readAsBytesSync());
 
-    final compressedImageFile = File('$path/img_${log_user.uid}')
+    final compressedImageFile = File('$path/img_$currentgoogleuserid')
       ..writeAsBytesSync(Img.encodeJpg(imageFile, quality: 85));
 
     setState(() {
@@ -113,8 +92,10 @@ class _AddStoreState extends State<AddStore> {
   }
 
   Future<String> uploadImage(imageFile) async {
-    StorageUploadTask uploadTask =
-        storageRef.child('store').child('post_1.jpg').putFile(imageFile);
+    StorageUploadTask uploadTask = storageRef
+        .child('store')
+        .child('post_$currentgoogleuserid.jpg')
+        .putFile(imageFile);
 
     StorageTaskSnapshot storageSnap = await uploadTask.onComplete;
 
@@ -169,20 +150,14 @@ class _AddStoreState extends State<AddStore> {
         child: Container(
             child: Padding(
           padding: const EdgeInsets.all(6.0),
-          // padding: const EdgeInsets.only(top: 40.0, left: 6.0),
           child: ListView(
             children: <Widget>[
               Stack(
                 children: [
                   Container(
-                    // padding: EdgeInsets.only(top: 6.0),
-
                     height: MediaQuery.of(context).size.height * 0.40,
-
                     color: Colors.grey[300],
-
                     width: double.infinity,
-
                     child: _image == null
                         ? Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -230,6 +205,7 @@ class _AddStoreState extends State<AddStore> {
               Column(mainAxisAlignment: MainAxisAlignment.start, children: <
                   Widget>[
                 TextFormField(
+                  maxLength: 20,
                   cursorColor: Colors.black,
                   validator: validatetName,
                   onSaved: (value) {
@@ -250,14 +226,16 @@ class _AddStoreState extends State<AddStore> {
                   onSaved: (value) {
                     _name = value;
                   },
+                  maxLength: 50,
                   keyboardType: TextInputType.text,
                   controller: _desccontroller,
                   decoration: InputDecoration(
-                      labelText: "Add store decription",
-                      border: InputBorder.none,
-                      labelStyle: TextStyle(
-                        fontSize: 20,
-                      )),
+                    labelText: "Add store decription",
+                    border: InputBorder.none,
+                    labelStyle: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
                 ),
                 SizedBox(
                   height: 70,

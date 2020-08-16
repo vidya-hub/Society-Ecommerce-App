@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '../screens/screen20.dart';
-import '../utils/widgetCart.dart';
 
 class Screen12 extends StatefulWidget {
   @override

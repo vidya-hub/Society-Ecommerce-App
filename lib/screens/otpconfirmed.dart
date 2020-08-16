@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:society/screens/buyerorseller.dart';
 import 'package:society/screens/screen4.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-
 class OtpConfirmedPage extends StatefulWidget {
   @override
   _OtpConfirmedPageState createState() => _OtpConfirmedPageState();

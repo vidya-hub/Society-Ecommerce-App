@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:society/screens/accountPage.dart';
-import 'package:society/screens/add_product_screen.dart';
-import 'package:society/screens/profilepage.dart';
 
 class DrawerScreen extends StatelessWidget {
   static const routeName = '/DrawerScreen';

@@ -3,16 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:nominatim_location_picker/nominatim_location_picker.dart';
 import 'package:nominatim_location_picker/nominatim_location_picker.dart';
-import 'package:nominatim_location_picker/nominatim_location_picker.dart';
 import 'package:society/models/SocietyModel.dart';
-import 'package:society/screens/categories.dart';
 import 'package:society/screens/profilepage.dart';
-import 'package:society/screens/welcome.dart';
 import 'package:society/utils/citystatelist.dart';
 
 final usersRef = Firestore.instance.collection('users');

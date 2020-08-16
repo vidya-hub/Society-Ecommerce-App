@@ -1,6 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:society/screens/add_store.dart';
-import '../screens/add_store.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'add_product_screen.dart';
 
 class Screen13 extends StatefulWidget {
@@ -8,49 +8,64 @@ class Screen13 extends StatefulWidget {
   _Screen13State createState() => _Screen13State();
 }
 
+String currentgoogleuserid;
+final GoogleSignIn googleSignIn = GoogleSignIn();
+
 class _Screen13State extends State<Screen13> {
-  int no_of_items = 2;
-  List<String> items_img_urls = [
-    "https://cdn0.weddingwire.in/emp/fotos/5/4/3/1/png-jewelles21_15_205431-1568861691.jpg",
-    "https://cdn0.weddingwire.in/emp/fotos/5/4/3/1/png-jewelles21_15_205431-1568861691.jpg"
-  ];
-  List<String> items_title = ["Hand Jewelry", "Blouse Fitting"];
-  List<int> items_price = [2500, 700];
-  String shop_name = "Swetha's Jewels";
-  //main description
-  String description =
-      "This is the hand jewellery crafted from the best of the stones and pure gold. I have red blue and green color available.";
+  @override
+  void initState() {
+    googleSignIn.signInSilently().then(
+      (value) {
+        setState(() {
+          currentgoogleuserid = value.id;
+          get_store(currentgoogleuserid);
+        });
+        print("this page $currentgoogleuserid");
+      },
+    ).catchError(
+      (error) {
+        print(error);
+      },
+    );
+    print(
+      Firestore.instance.collection("AddStore").document(currentgoogleuserid),
+    );
+
+    super.initState();
+  }
+
+  var storename;
+  var store_imgurl;
+  var store_cat;
+  var store_created;
+  var description;
+  get_store(id) async {
+    var store_details =
+        await Firestore.instance.collection("AddStore").document(id).get();
+    setState(
+      () {
+        storename = store_details.data["storeName"];
+        description = store_details.data["storeDescription"];
+        store_imgurl = store_details.data["s_photoUrl"];
+        store_cat = store_details.data["selected-category"];
+        store_created = store_details.data["createdAt"];
+      },
+    );
+    print(store_imgurl);
+  }
+
+  var productdetails = Firestore.instance
+      .collection("Product")
+      .document(currentgoogleuserid)
+      .collection("products")
+      .snapshots();
+
+  var url_img =
+      "https://images.pexels.com/photos/1236701/pexels-photo-1236701.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // bottomNavigationBar: BottomNavigationBar(
-      //   type: BottomNavigationBarType.fixed,
-      //   selectedItemColor: Colors.black,
-      //   items: [
-      //     BottomNavigationBarItem(
-      //         icon: Icon(Icons.card_travel, color: Colors.black),
-      //         title:
-      //             new Text("Buy", style: new TextStyle(color: Colors.black))),
-      //     BottomNavigationBarItem(
-      //         icon: Icon(Icons.store, color: Colors.black),
-      //         title: new Text("My Store",
-      //             style: new TextStyle(color: Colors.black))),
-      //     BottomNavigationBarItem(
-      //         icon: Icon(
-      //           Icons.format_list_bulleted,
-      //           color: Colors.black,
-      //         ),
-      //         title: new Text("My Order",
-      //             style: new TextStyle(color: Colors.black))),
-      //     BottomNavigationBarItem(
-      //         icon: Icon(
-      //           Icons.person,
-      //           color: Colors.black,
-      //         ),
-      //         title: new Text("Profile",
-      //             style: new TextStyle(color: Colors.black))),
-      //   ],
-      // ),
       body: Container(
         child: SingleChildScrollView(
           child: Column(
@@ -59,15 +74,26 @@ class _Screen13State extends State<Screen13> {
               Container(
                 height: MediaQuery.of(context).size.height / 1.5,
                 // header image or main image
-                child: Image.network(
-                    "https://cdn0.weddingwire.in/emp/fotos/5/4/3/1/png-jewelles21_15_205431-1568861691.jpg"),
+                child: store_imgurl == null
+                    ? Center(
+                        child: Container(
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    : Center(
+                        child: Container(
+                          height: 500,
+                          width: 600,
+                          child: Image.network(store_imgurl),
+                        ),
+                      ),
               ),
               SizedBox(
                 height: 26,
               ),
               Center(
                 child: Text(
-                  shop_name,
+                  storename == null ? "Loading" : storename,
                   style: TextStyle(fontSize: 26),
                 ),
               ),
@@ -76,7 +102,7 @@ class _Screen13State extends State<Screen13> {
               ),
               Container(
                 child: Text(
-                  description,
+                  description == null ? "Loading" : description,
                   style: TextStyle(fontSize: 15),
                   textAlign: TextAlign.center,
                 ),
@@ -85,51 +111,89 @@ class _Screen13State extends State<Screen13> {
               SizedBox(
                 height: 18,
               ),
-              Container(
-                child: GridView.count(
-                  childAspectRatio: (0.85),
-                  shrinkWrap: true,
-                  crossAxisCount: 2,
-                  children: List.generate(no_of_items, (index) {
-                    return Center(
-                      child: Container(
-                        padding: EdgeInsets.all(0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Expanded(
-                              child: Image.network(
-                                items_img_urls[index],
+              StreamBuilder<QuerySnapshot>(
+                stream: Firestore.instance
+                    .collection("Product")
+                    .document(currentgoogleuserid)
+                    .collection("products")
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  return Container(
+                    child: GridView.count(
+                      childAspectRatio: (0.85),
+                      shrinkWrap: true,
+                      crossAxisCount: 2,
+                      children: List.generate(
+                        snapshot.data.documents.length,
+                        (index) {
+                          return Center(
+                            child: Container(
+                              padding: EdgeInsets.all(0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: snapshot.data.documents[index]
+                                                .data['productPhotoUrl'] !=
+                                            null
+                                        ? Image.network(
+                                            snapshot.data.documents[index]
+                                                .data['productPhotoUrl'],
+                                          )
+                                        : Center(
+                                            child: Container(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            ),
+                                          ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    snapshot.data.documents[index]
+                                                .data['productName'] ==
+                                            null
+                                        ? "Loading....."
+                                        : snapshot.data.documents[index]
+                                            .data['productName'],
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  Text(
+                                    storename == null
+                                        ? "Loading....."
+                                        : storename,
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w300),
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  Text(
+                                    "Rs " +
+                                                snapshot.data.documents[index]
+                                                    .data['productPrice'] ==
+                                            null
+                                        ? "Loading....."
+                                        : snapshot.data.documents[index]
+                                            .data['productPrice'],
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                ],
                               ),
                             ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              items_title[index],
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.w700),
-                            ),
-                            Text(
-                              shop_name,
-                              style: TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.w300),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text(
-                              "Rs " + items_price[index].toString(),
-                              style: TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.w700),
-                            ),
-                          ],
-                        ),
+                          );
+                        },
                       ),
-                    );
-                  }),
-                ),
+                    ),
+                  );
+                },
               ),
               SizedBox(
                 height: 70,
@@ -147,8 +211,10 @@ class _Screen13State extends State<Screen13> {
                           fontSize: 16),
                     ),
                     onPressed: () {
-                       Navigator.push(context,
-                        MaterialPageRoute(builder: (context) =>AddProductScreen()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AddProductScreen()));
                     },
                     color: Colors.green[700],
                   ),

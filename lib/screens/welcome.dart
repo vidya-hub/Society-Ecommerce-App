@@ -5,9 +5,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:society/models/SocietyModel.dart';
-import 'package:society/screens/buyerorseller.dart';
-import 'package:society/screens/otp.dart';
-import 'package:society/screens/otpconfirmed.dart';
 import 'package:society/screens/screen4.dart';
 import 'package:society/screens/screen8.dart';
 
@@ -40,7 +37,7 @@ class _WelcomePageState extends State<WelcomePage> {
           (value) => {
             if (value)
               {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                     builder: (context) => Screen8(),
@@ -131,7 +128,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       print(sp.data);
                       print(sp.exists);
                       if (sp.exists) {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                             builder: (context) => Screen8(),
@@ -152,7 +149,7 @@ class _WelcomePageState extends State<WelcomePage> {
                         setState(() {
                           _saving = false;
                         });
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                             builder: (context) => Screen4(
