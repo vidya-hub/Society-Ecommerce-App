@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import './models/products.dart';
 import './screens/AddSociety.dart';
-
 import './screens/drawerScreen.dart';
 import './screens/findSociety.dart';
 import './screens/welcome.dart';

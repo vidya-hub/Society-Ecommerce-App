@@ -23,6 +23,62 @@
           }
         },
         {
+          "client_id": "537484323073-ht8i10h6ncu3nf16ltjtctfpujkkv4g7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lee.society",
+            "certificate_hash": "696054c78c56a86d84418475e6dc636616236153"
+          }
+        },
+        {
+          "client_id": "537484323073-m57mqvoj5hn8ncs6u98gi9a2fjm2iear.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lee.society",
+            "certificate_hash": "4eb5d1adc93ae6dcbfa77d68f69da03277d7e684"
+          }
+        },
+        {
+          "client_id": "537484323073-nq7igbijhpprgg8np5mqitopetl7qbeh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lee.society",
+            "certificate_hash": "0bafe7474a455ab85950567aedbf93673e6f1427"
+          }
+        },
+        {
+          "client_id": "537484323073-q3p37109ckbsmntaiusk5m7k6ogod9je.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lee.society",
+            "certificate_hash": "6eb713b118208c50ad5582d7e3854aee1dcb80af"
+          }
+        },
+        {
+          "client_id": "537484323073-s9f75l8fijf4r9d6stivp683o0urm9rh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lee.society",
+            "certificate_hash": "f4aebb7b6a2552d9ed3d3ba1739a672224375d20"
+          }
+        },
+        {
+          "client_id": "537484323073-sfugjcipp5giva9rqk5fcbes26l51oqs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lee.society",
+            "certificate_hash": "d19de013064c6f47ff65869e0af9ec9cfead06b7"
+          }
+        },
+        {
+          "client_id": "537484323073-t47n84va4dcdhcjmvqrhavij55s1o1gh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lee.society",
+            "certificate_hash": "d5a716f547cdc5dc0c484eed2fd33e634bb77f47"
+          }
+        },
+        {
           "client_id": "537484323073-5e2oas9da5ucnqp5g4uqsve4h95a1sdu.apps.googleusercontent.com",
           "client_type": 3
         }
